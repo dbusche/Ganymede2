@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.opfermann.ganymede"
+   name="Ganymede"
+   version="0.9.1"
+   provider-name="opfermann.org"
+   class="ganymede.Ganymede">
+
+   <runtime>
+      <library name="lib/jakarta-regexp-1.2.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/junit.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/log4j-1.2.8.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui"/>
+   </requires>
+
+   <extension
+         id="Ganymede.views"
+         name="org.eclipse.ui.views"
+         point="org.eclipse.ui.views">
+      <category
+            name="Logging"
+            id="GanymedeEclipseProject.Logging"/>
+      <view
+            name="Ganymede Log4j View"
+            icon="icons/ganymede.gif"
+            category="GanymedeEclipseProject.Logging"
+            class="ganymede.views.GanymedeView"
+            id="ganymede.views.GanymedeView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               visible="true"
+               relationship="right"
+               id="ganymede.views.GanymedeView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Ganymede Log4j Viewer"
+            class="ganymede.preferences.Log4jPreferencePage"
+            id="ganymede.preferences.Log4jPreferencePage">
+      </page>
+      <page
+            name="Filters"
+            category="ganymede.preferences.Log4jPreferencePage"
+            class="ganymede.preferences.Log4jFilterPreferencePage"
+            id="ganymede.preferences.Log4jFilterPreferencePage">
+      </page>
+      <page
+            name="Columns"
+            category="ganymede.preferences.Log4jPreferencePage"
+            class="ganymede.preferences.Log4jColumnsPreferencePage"
+            id="ganymede.preferences.Log4jColumnsPreferencePage">
+      </page>
+      <page
+            name="Color"
+            category="ganymede.preferences.Log4jPreferencePage"
+            class="ganymede.preferences.ColorPreferencePage"
+            id="ganymede.preferences.ColorPreferencePage">
+      </page>
+   </extension>
+   <extension
+         id="ganymede.viewactions"
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            targetID="ganymede.views.GanymedeView"
+            id="Ganymede.ViewContribution">
+         <action
+               label="&amp;Quick Filter"
+               icon="icons/filter.gif"
+               tooltip="Add a &amp;Quick filter"
+               class="ganymede.actions.QuickFilterAction"
+               menubarPath="Ganymede.FilterMenu/Ganymede.FilterGroup1"
+               toolbarPath="Group3"
+               enablesFor="*"
+               id="Ganymede.QuickFilterAction">
+         </action>
+         <action
+               style="toggle"
+               id="Ganymede.PauseAction"
+               toolbarPath="Group1"
+               class="ganymede.actions.PauseAction"
+               enablesFor="*"
+               icon="icons/pause.gif"
+               label="Pause Display"
+               menubarPath="Ganymede.DisplayMenu/Ganymede.DisplayGroup1"
+               tooltip="&amp;Pause">
+         </action>
+         <action
+               style="push"
+               id="Ganymede.ClearAction"
+               toolbarPath="Group1"
+               class="ganymede.actions.ClearAction"
+               enablesFor="*"
+               icon="icons/clear.gif"
+               label="&amp;Clear Display"
+               menubarPath="Ganymede.DisplayMenu/Ganymede.DisplayGroup1"
+               tooltip="&amp;Clear">
+         </action>
+         <action
+               style="push"
+               id="Ganymede.StopAction"
+               toolbarPath="Group2"
+               class="ganymede.actions.StopAction"
+               enablesFor="*"
+               icon="icons/stop.gif"
+               label="S&amp;top Log4j Server"
+               menubarPath="Ganymede.Log4jServerMenu/Ganymede.Log4jServerGroup1"
+               tooltip="S&amp;top  Log4j Server">
+         </action>
+         <action
+               style="push"
+               id="Ganymede.StartAction"
+               toolbarPath="Group2"
+               class="ganymede.actions.StartAction"
+               enablesFor="*"
+               icon="icons/start.gif"
+               label="&amp;Start Log4j Server"
+               menubarPath="Ganymede.Log4jServerMenu/Ganymede.Log4jServerGroup1"
+               tooltip="&amp;Start Log4j Server">
+         </action>
+         <menu
+               label="Log4j Server"
+               path="additions"
+               id="Ganymede.Log4jServerMenu">
+            <separator
+                  name="Ganymede.Log4jServerGroup1">
+            </separator>
+         </menu>
+         <menu
+               label="Display"
+               path="additions"
+               id="Ganymede.DisplayMenu">
+            <separator
+                  name="Ganymede.DisplayGroup1">
+            </separator>
+         </menu>
+         <menu
+               label="Filter"
+               path="additions"
+               id="Ganymede.FilterMenu">
+            <separator
+                  name="Ganymede.FilterGroup1">
+            </separator>
+         </menu>
+      </viewContribution>
+   </extension>
+
+</plugin>
