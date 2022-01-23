@@ -1,6 +1,7 @@
 package ganymede.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.ThreadContext.ContextStack;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -12,9 +13,9 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class Log4jNDC implements Log4jItem {
 
-    private LoggingEvent le;
+    private LogEvent le;
 
-    public Log4jNDC(LoggingEvent event) {
+    public Log4jNDC(LogEvent event) {
         le = event;
     }
 
@@ -22,7 +23,11 @@ public class Log4jNDC implements Log4jItem {
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-        return le.getNDC();
+        ContextStack contextStack = le.getContextStack();
+        if (contextStack != null) {
+        	return contextStack.peek();
+        }
+		return "";
     }
 
 }

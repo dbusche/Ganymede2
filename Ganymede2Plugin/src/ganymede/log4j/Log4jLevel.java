@@ -1,6 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -11,9 +11,9 @@ import org.apache.log4j.spi.LoggingEvent;
  * Window>Preferences>Java>Code Generation.
  */
 public class Log4jLevel implements Log4jItem {
-	LoggingEvent le;
+	LogEvent le;
 	
-	public Log4jLevel(LoggingEvent event) {
+	public Log4jLevel(LogEvent event) {
 		le = event;
 	}
 

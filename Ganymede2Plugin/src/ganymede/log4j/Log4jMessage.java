@@ -1,6 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -12,9 +12,9 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class Log4jMessage implements Log4jItem {
 
-    LoggingEvent le;
+    LogEvent le;
 
-    public Log4jMessage(LoggingEvent event) {
+    public Log4jMessage(LogEvent event) {
         le = event;
     }
 
@@ -22,7 +22,7 @@ public class Log4jMessage implements Log4jItem {
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-        return le.getRenderedMessage();
+        return le.getMessage().getFormattedMessage();
     }
 
 }

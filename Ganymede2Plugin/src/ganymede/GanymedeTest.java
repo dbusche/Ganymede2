@@ -2,7 +2,8 @@ package ganymede;
 
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -17,7 +18,7 @@ import junit.framework.TestSuite;
  */
 public class GanymedeTest extends TestCase {
 	
-	static private Logger log = Logger.getLogger(GanymedeTest.class);
+	static private Logger log = LogManager.getLogger(GanymedeTest.class);
 	
     /**
      * Constructor for GanymedeTest.

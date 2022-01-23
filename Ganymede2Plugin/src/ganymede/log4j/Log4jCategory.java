@@ -1,6 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -12,9 +12,9 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class Log4jCategory implements Log4jItem {
 	
-	private LoggingEvent le;
+	private LogEvent le;
 	
-	public Log4jCategory(LoggingEvent event) {
+	public Log4jCategory(LogEvent event) {
 		le = event;
 	}
 

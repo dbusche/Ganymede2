@@ -2,7 +2,7 @@ package ganymede.log4j;
 
 import java.sql.Timestamp;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -13,18 +13,18 @@ import org.apache.log4j.spi.LoggingEvent;
  * Window>Preferences>Java>Code Generation.
  */
 public class Log4jDate implements Log4jItem {
-    LoggingEvent le;
+    LogEvent le;
     
     
 
-    public Log4jDate(LoggingEvent event) {
+    public Log4jDate(LogEvent event) {
         le = event;
     }
     /**
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-        return new Timestamp(le.timeStamp).toString();
+        return new Timestamp(le.getTimeMillis()).toString();
     }
 
 }

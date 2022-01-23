@@ -1,18 +1,18 @@
 package ganymede.log4j;
 
-import ganymede.Ganymede;
-import ganymede.GanymedeUtilities;
-import ganymede.preferences.Log4jPreferencePage;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
+
+import ganymede.Ganymede;
+import ganymede.GanymedeUtilities;
+import ganymede.preferences.Log4jPreferencePage;
 
 /**
  * @author Brandon
@@ -61,12 +61,12 @@ public class Log4jServer extends Thread
 		try
 		{
 			int port =
-				Ganymede.getDefault().getPreferenceStore().getInt(
-					Log4jPreferencePage.P_PORT);
-			setLog4jServer(new Log4jServer());
-			getLog4jServer().setServerUp(true);
-			setServerSocket(new ServerSocket(port));
-			getServerSocket().setReuseAddress(true);
+					Ganymede.getDefault().getPreferenceStore().getInt(
+						Log4jPreferencePage.P_PORT);
+				setLog4jServer(new Log4jServer());
+				getLog4jServer().setServerUp(true);
+				setServerSocket(new ServerSocket(port));
+				getServerSocket().setReuseAddress(true);
 			getLog4jServer().start();
 		}
 		catch (IOException ioe)
@@ -74,7 +74,7 @@ public class Log4jServer extends Thread
 			ioe.printStackTrace();
 			return false;
 		}
-
+		
 		GanymedeUtilities.getStartAction().setEnabled(false);
 		GanymedeUtilities.getStopAction().setEnabled(true);
 		return true;
@@ -116,14 +116,14 @@ public class Log4jServer extends Thread
 	 * off updates to the GUI.
 	 * @param le The logging event to add
 	 */
-	static synchronized public void newMessage(LoggingEvent le)
+	static synchronized public void newMessage(LogEvent le)
 	{
-		final LoggingEvent thisEvent = le;
+		final LogEvent thisEvent = le;
 		Display.findDisplay(getPrimary()).asyncExec(new Runnable()
 		{
 			public void run()
 			{
-				LogSet.getInstance().addLoggingEvent(thisEvent);
+				LogSet.getInstance().addLogEvent(thisEvent);
 			}
 		});
 	}
@@ -228,7 +228,7 @@ public class Log4jServer extends Thread
 				while (mServerUp && isActive())
 				{
 
-					LoggingEvent event = (LoggingEvent) ois.readObject();
+					LogEvent event = (LogEvent) ois.readObject();
 					newMessage(event);
 				}
 			}

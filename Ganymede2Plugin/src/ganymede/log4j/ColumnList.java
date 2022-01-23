@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -41,7 +41,7 @@ public class ColumnList
 		return cl;
 	}
 
-	public String getText(int col, LoggingEvent le)
+	public String getText(int col, LogEvent le)
 	{
 		return GanymedeUtilities.handleNull(
 			GanymedeUtilities

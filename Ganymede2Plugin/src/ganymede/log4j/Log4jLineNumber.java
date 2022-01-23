@@ -1,7 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.log4j.spi.LocationInfo;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -13,9 +12,9 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class Log4jLineNumber implements Log4jItem {
 	
-	private LoggingEvent le;
+	private LogEvent le;
 	
-	public Log4jLineNumber(LoggingEvent event) {
+	public Log4jLineNumber(LogEvent event) {
 		le = event;
 	}
 
@@ -23,11 +22,11 @@ public class Log4jLineNumber implements Log4jItem {
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-    	LocationInfo location = le.getLocationInformation();
+    	StackTraceElement location = le.getSource();
         if ( location == null ) {
         	return "";
         } else {
-        	return location.getLineNumber();
+        	return Integer.toString(location.getLineNumber());
         }
     }
 

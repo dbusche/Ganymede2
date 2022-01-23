@@ -1,16 +1,16 @@
 package ganymede.log4j;
 
-import ganymede.GanymedeUtilities;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.StringTokenizer;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 import org.apache.regexp.RE;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
+
+import ganymede.GanymedeUtilities;
 
 /**
  * @author Brandon
@@ -65,12 +65,12 @@ public class Filter implements Serializable
 	 * @param event
 	 * @return String
 	 */
-	private String getInputValue(LoggingEvent event)
+	private String getInputValue(LogEvent event)
 	{
 		return getInputValue(event, type);
 	}
 
-	private String getInputValue(LoggingEvent event, int type)
+	private String getInputValue(LogEvent event, int type)
 	{
 		return GanymedeUtilities.Log4jItemFactory(type, event).getText();
 	}
@@ -80,7 +80,7 @@ public class Filter implements Serializable
 	 * @param le
 	 * @return boolean
 	 */
-	public boolean isValid(LoggingEvent le)
+	public boolean isValid(LogEvent le)
 	{
 		String fromMessage = getInputValue(le);
 		String fromFilter = criteria;
@@ -114,7 +114,7 @@ public class Filter implements Serializable
 		}
 	}
 
-	public boolean isValid(LoggingEvent le, boolean allFields)
+	public boolean isValid(LogEvent le, boolean allFields)
 	{
 		if (allFields)
 		{

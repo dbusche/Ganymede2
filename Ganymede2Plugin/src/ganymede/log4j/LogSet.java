@@ -1,13 +1,13 @@
 package ganymede.log4j;
 
-import ganymede.GanymedeUtilities;
-import ganymede.actions.PauseAction;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
+
+import ganymede.GanymedeUtilities;
+import ganymede.actions.PauseAction;
 
 /**
  * @author Brandon
@@ -40,7 +40,7 @@ public class LogSet
 	 * Add a log4j event to the set and alert listeners
 	 * @param le
 	 */
-	public void addLoggingEvent(LoggingEvent le)
+	public void addLogEvent(LogEvent le)
 	{
 		mAllLogs.add(le); // add to entire set regardless of filters
 		if (getFilterset().isValidForShow(le))
@@ -83,9 +83,9 @@ public class LogSet
         mHiddenLogs.clear();
 	}
 
-	public LoggingEvent getLoggingEventShowingAt(int idx)
+	public LogEvent getLogEventShowingAt(int idx)
 	{
-		return (LoggingEvent) mShowingLogs.get(idx);
+		return (LogEvent) mShowingLogs.get(idx);
 	}
 
 	public Collection getValidLogs()
@@ -111,10 +111,10 @@ public class LogSet
 		mShowingLogs.clear();
         mHiddenLogs.clear();
 		Iterator allLogs = mAllLogs.iterator();
-		LoggingEvent thisEvent;
+		LogEvent thisEvent;
 		while (allLogs.hasNext())
 		{
-			thisEvent = (LoggingEvent) allLogs.next();
+			thisEvent = (LogEvent) allLogs.next();
 			if (getFilterset().isValidForShow(thisEvent))
 			{
 				mShowingLogs.insertElementAt(thisEvent, 0);

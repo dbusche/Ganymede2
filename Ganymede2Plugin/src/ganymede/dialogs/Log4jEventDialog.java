@@ -1,8 +1,8 @@
 package ganymede.dialogs;
 
-import ganymede.GanymedeUtilities;
-
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.impl.ExtendedStackTraceElement;
+import org.apache.logging.log4j.core.impl.ThrowableProxy;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -19,23 +19,25 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ganymede.GanymedeUtilities;
+
 /**
  * @author Brandon
  */
 public class Log4jEventDialog extends Dialog
 {
-	private LoggingEvent mLoggingEvent;
+	private LogEvent mLogEvent;
 	
 	private Composite topComposite;
 
 	/**
 	 * @param parentShell
 	 */
-	public Log4jEventDialog(Shell parentShell, LoggingEvent le)
+	public Log4jEventDialog(Shell parentShell, LogEvent le)
 	{
 		super(parentShell);
 		setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
-		setLoggingEvent(le);
+		setLogEvent(le);
 	}
 
 	/**
@@ -69,7 +71,7 @@ public class Log4jEventDialog extends Dialog
 		label.setLayoutData(gData);
 
 		label = new Label(topDataComposite, SWT.NONE);
-		label.setText(getLoggingEvent().getLevel().toString());
+		label.setText(getLogEvent().getLevel().toString());
 		gData = new GridData();
 		gData.horizontalSpan = 2;
 		label.setLayoutData(gData);
@@ -85,12 +87,12 @@ public class Log4jEventDialog extends Dialog
 		label.setLayoutData(gData);
 
 		label = new Label(topDataComposite, SWT.NONE);
-		label.setText(getLoggingEvent().getLoggerName());
+		label.setText(getLogEvent().getLoggerName());
 		gData = new GridData();
 		gData.horizontalSpan = 2;
 		label.setLayoutData(gData);
 
-		if (getLoggingEvent().getLocationInformation() != null)
+		if (getLogEvent().getSource() != null)
 		{
 			label = new Label(topDataComposite, SWT.NONE);
 			label.setText("Location Information");
@@ -121,7 +123,7 @@ public class Log4jEventDialog extends Dialog
 
 			label = new Label(topDataComposite, SWT.NONE);
 			label.setText(
-				getLoggingEvent().getLocationInformation().getFileName());
+				getLogEvent().getSource().getFileName());
 			gData = new GridData();
 			gData.horizontalSpan = 1;
 			label.setLayoutData(gData);
@@ -145,7 +147,7 @@ public class Log4jEventDialog extends Dialog
 
 			label = new Label(topDataComposite, SWT.NONE);
 			label.setText(
-				getLoggingEvent().getLocationInformation().getClassName());
+				getLogEvent().getSource().getClassName());
 			gData = new GridData();
 			gData.horizontalSpan = 1;
 			label.setLayoutData(gData);
@@ -169,7 +171,7 @@ public class Log4jEventDialog extends Dialog
 
 			label = new Label(topDataComposite, SWT.NONE);
 			label.setText(
-				getLoggingEvent().getLocationInformation().getMethodName()
+				getLogEvent().getSource().getMethodName()
 					+ "()");
 			gData = new GridData();
 			gData.horizontalSpan = 1;
@@ -194,7 +196,7 @@ public class Log4jEventDialog extends Dialog
 
 			label = new Label(topDataComposite, SWT.NONE);
 			label.setText(
-				getLoggingEvent().getLocationInformation().getLineNumber());
+				Integer.toString(getLogEvent().getSource().getLineNumber()));
 			gData = new GridData();
 			gData.horizontalSpan = 1;
 			label.setLayoutData(gData);
@@ -219,13 +221,13 @@ public class Log4jEventDialog extends Dialog
 		text =
 			new Text(renderedMessageComposite,
 				SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL);
-		text.setText(getLoggingEvent().getRenderedMessage());
+		text.setText(getLogEvent().getMessage().getFormattedMessage());
 		text.setEditable(false);
 		gData = new GridData(GridData.FILL_BOTH);
 		gData.horizontalSpan = 3;
 		text.setLayoutData(gData);
 
-		if (getLoggingEvent().getThrowableInformation() != null)
+		if (getLogEvent().getThrownProxy() != null)
 		{
 			
 			Composite throwableMessageComposite = new Composite(sashForm, SWT.BORDER);
@@ -247,17 +249,32 @@ public class Log4jEventDialog extends Dialog
 				new Text(
 						throwableMessageComposite,
 					SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL);
-			String[] stack =
-				getLoggingEvent()
-					.getThrowableInformation()
-					.getThrowableStrRep();
-			StringBuffer stackString = new StringBuffer();
-			for (int i = 0; i < stack.length; i++)
-			{
-				stackString.append(stack[i]);
-				stackString.append("\n");
+			
+			StringBuilder out = new StringBuilder();
+			ThrowableProxy thrown = getLogEvent().getThrownProxy();
+			boolean isFirst = true;
+			while (thrown != null) {
+				if (!isFirst) {
+					out.append("Caused by: ");
+				}
+				out.append(thrown);
+				out.append('\n');
+				for (ExtendedStackTraceElement stackElem : thrown.getExtendedStackTrace()) {
+					out.append("\tat ");
+					out.append(stackElem.getClassName());
+					out.append('.');
+					out.append(stackElem.getMethodName());
+					out.append('(');
+					out.append(stackElem.getFileName());
+					out.append(':');
+					out.append(stackElem.getLineNumber());
+					out.append(')');
+					out.append('\n');
+				}
+				thrown = thrown.getCauseProxy();
+				isFirst = false;
 			}
-			text.setText(stackString.toString());
+			text.setText(out.toString());
 			text.setEditable(false);
 			gData = new GridData(GridData.FILL_BOTH);
 			gData.horizontalSpan = 3;
@@ -272,16 +289,16 @@ public class Log4jEventDialog extends Dialog
 	 * @param le
 	 * @return String
 	 */
-	static public String getTitleText(LoggingEvent le)
+	static public String getTitleText(LogEvent le)
 	{
-		if (le.getLocationInformation() != null)
+		if (le.getSource() != null)
 		{
 			return "["
 				+ le.getLevel()
 				+ "] "
 				+ le.getLoggerName()
 				+ "(line #: "
-				+ le.getLocationInformation().getLineNumber()
+				+ le.getSource().getLineNumber()
 				+ ")";
 		}
 		else
@@ -303,23 +320,23 @@ public class Log4jEventDialog extends Dialog
 	protected void configureShell(Shell newShell)
 	{
 		super.configureShell(newShell);
-		newShell.setText(getTitleText(getLoggingEvent()));
+		newShell.setText(getTitleText(getLogEvent()));
 	}
 
 	/**
 	 * @return
 	 */
-	public LoggingEvent getLoggingEvent()
+	public LogEvent getLogEvent()
 	{
-		return mLoggingEvent;
+		return mLogEvent;
 	}
 
 	/**
 	 * @param aEvent
 	 */
-	public void setLoggingEvent(LoggingEvent aEvent)
+	public void setLogEvent(LogEvent aEvent)
 	{
-		mLoggingEvent = aEvent;
+		mLogEvent = aEvent;
 	}
 
 	/* (non-Javadoc)

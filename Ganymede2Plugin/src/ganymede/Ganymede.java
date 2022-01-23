@@ -5,14 +5,13 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class Ganymede extends AbstractUIPlugin
+public class Ganymede extends AbstractUIPlugin 
 {
 	//The shared instance.
 	private static Ganymede plugin;
@@ -26,7 +25,8 @@ public class Ganymede extends AbstractUIPlugin
 	/**
 	 * The constructor.
 	 */
-	public Ganymede(IPluginDescriptor desc)
+//	public Ganymede(IPluginDescriptor desc)
+	public Ganymede()
 	{
 		super();
 		plugin = this;
@@ -69,6 +69,9 @@ public class Ganymede extends AbstractUIPlugin
 	public static IWorkspace getWorkspace()
 	{
 		return ResourcesPlugin.getWorkspace();
+	}
+	
+	public static void markServerStarted(boolean b) {
 	}
 
 	/**

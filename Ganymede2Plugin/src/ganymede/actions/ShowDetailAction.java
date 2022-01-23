@@ -1,11 +1,11 @@
 package ganymede.actions;
 
+import org.apache.logging.log4j.core.LogEvent;
+import org.eclipse.jface.action.Action;
+
 import ganymede.GanymedeUtilities;
 import ganymede.dialogs.Log4jEventDialog;
 import ganymede.log4j.LogSet;
-
-import org.apache.log4j.spi.LoggingEvent;
-import org.eclipse.jface.action.Action;
 
 /**
  * @author Brandon
@@ -14,8 +14,8 @@ public class ShowDetailAction extends Action
 {
 	public void run()
 	{
-		LoggingEvent le =
-			LogSet.getInstance().getLoggingEventShowingAt(
+		LogEvent le =
+			LogSet.getInstance().getLogEventShowingAt(
 				GanymedeUtilities.getTable().getSelectionIndex());
 
 		// build up display

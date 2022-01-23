@@ -1,15 +1,6 @@
 package ganymede.views;
 
-import ganymede.Ganymede;
-import ganymede.GanymedeUtilities;
-import ganymede.actions.QuickFilterAction;
-import ganymede.actions.ShowDetailAction;
-import ganymede.listeners.IMouseListener;
-import ganymede.listeners.LifecycleListener;
-import ganymede.log4j.ColumnList;
-import ganymede.log4j.Log4jServer;
-import ganymede.preferences.Log4jColumnsPreferencePage;
-import ganymede.preferences.Log4jPreferencePage;
+import javax.inject.Inject;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -22,12 +13,32 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
+import ganymede.Ganymede;
+import ganymede.GanymedeUtilities;
+import ganymede.actions.QuickFilterAction;
+import ganymede.actions.ShowDetailAction;
+import ganymede.listeners.IMouseListener;
+import ganymede.listeners.LifecycleListener;
+import ganymede.log4j.ColumnList;
+import ganymede.log4j.Log4jServer;
+import ganymede.preferences.Log4jColumnsPreferencePage;
+import ganymede.preferences.Log4jPreferencePage;
+
 public class GanymedeView extends ViewPart
 {
-	//private TableViewer viewer;
+
+	/**
+	 * The ID of the view as specified by the extension.
+	 */
+	public static final String ID = "ganymede.views.GanymedeView";
+
+	@Inject IWorkbench workbench;
+	
+//private TableViewer viewer;
 	//private Action actionStart;
 	//private Action actionStop;
 	//private Action actionClear;

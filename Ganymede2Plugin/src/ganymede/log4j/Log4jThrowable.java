@@ -1,6 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -12,9 +12,9 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class Log4jThrowable implements Log4jItem {
 	
-    private LoggingEvent le;
+    private LogEvent le;
     
-	public Log4jThrowable(LoggingEvent event) {
+	public Log4jThrowable(LogEvent event) {
 		le = event;
 	}
 
@@ -22,7 +22,7 @@ public class Log4jThrowable implements Log4jItem {
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-    	if ( le.getThrowableInformation() != null ) {
+    	if ( le.getThrownProxy() != null ) {
     		return "X"; // TODO: use image instead
     	} else {
     		return "";

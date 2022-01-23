@@ -3,7 +3,7 @@ package ganymede.log4j;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * @author Brandon
@@ -48,7 +48,7 @@ public class FilterSet
 		return filters.iterator();
 	}
 
-	public boolean isValidForShow(LoggingEvent le)
+	public boolean isValidForShow(LogEvent le)
 	{
 		Iterator i = iterator();
 		while (i.hasNext())

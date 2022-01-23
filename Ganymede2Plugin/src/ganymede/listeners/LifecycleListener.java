@@ -1,12 +1,12 @@
 package ganymede.listeners;
 
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
+
 import ganymede.Ganymede;
 import ganymede.GanymedeUtilities;
 import ganymede.log4j.Log4jServer;
 import ganymede.preferences.Log4jPreferencePage;
-
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
 
 /**
  * @author Brandon

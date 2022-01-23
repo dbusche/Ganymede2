@@ -1,5 +1,27 @@
 package ganymede;
 
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.LogEvent;
+import org.eclipse.e4.ui.model.application.ui.menu.MItem;
+import org.eclipse.e4.ui.workbench.renderers.swt.HandledContributionItem;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.IViewSite;
+
 import ganymede.actions.ShowDetailAction;
 import ganymede.log4j.ColumnList;
 import ganymede.log4j.Log4jCategory;
@@ -14,27 +36,6 @@ import ganymede.log4j.Log4jThrowable;
 import ganymede.log4j.LogSet;
 import ganymede.preferences.ColorPreferencePage;
 import ganymede.views.GanymedeView;
-
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Vector;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.IViewSite;
 
 /**
  * @author Brandon
@@ -51,9 +52,9 @@ public class GanymedeUtilities {
 
 	private static Hashtable colors = new Hashtable(5);
 
-	private static IAction mStartAction;
+	private static MItem mStartAction;
 
-	private static IAction mStopAction;
+	private static MItem mStopAction;
 
 	private static IViewSite mSite;
 
@@ -129,7 +130,7 @@ public class GanymedeUtilities {
 		}
 	}
 
-	static public Log4jItem Log4jItemFactory(int type, LoggingEvent e) {
+	static public Log4jItem Log4jItemFactory(int type, LogEvent e) {
 		switch (type) {
 		case Log4jItem.LEVEL:
 			return new Log4jLevel(e);
@@ -232,9 +233,9 @@ public class GanymedeUtilities {
 		}
 	}
 
-	public static String getColumnText(Object aLoggingEvent, int aColumnIndex) {
-		if (aLoggingEvent instanceof LoggingEvent) {
-			LoggingEvent le = (LoggingEvent) aLoggingEvent;
+	public static String getColumnText(Object aLogEvent, int aColumnIndex) {
+		if (aLogEvent instanceof LogEvent) {
+			LogEvent le = (LogEvent) aLogEvent;
 			return ColumnList.getInstance().getText(aColumnIndex, le);
 		}
 
@@ -328,7 +329,7 @@ public class GanymedeUtilities {
 			TableItem[] items = getTable().getItems();
 			int idx = 0;
 			for (Iterator logIter = validLogs.iterator(); logIter.hasNext(); idx++) {
-				LoggingEvent le = (LoggingEvent) logIter.next();
+				LogEvent le = (LogEvent) logIter.next();
 				items[idx].setForeground(GanymedeUtilities.getColor(le
 						.getLevel()));
 			}
@@ -379,7 +380,7 @@ public class GanymedeUtilities {
 			TableItem thisItem;
 			int idx = 0;
 			for (Iterator logIter = validLogs.iterator(); logIter.hasNext(); idx++) {
-				LoggingEvent le = (LoggingEvent) logIter.next();
+				LogEvent le = (LogEvent) logIter.next();
 				if (idx < itemCount) // reuse if possible
 				{
 					thisItem = items[idx];
@@ -415,7 +416,7 @@ public class GanymedeUtilities {
 	/**
 	 * @return
 	 */
-	public static IAction getStartAction() {
+	public static MItem getStartAction() {
 		if (!isActionsInited()) {
 			initActions();
 		}
@@ -425,7 +426,7 @@ public class GanymedeUtilities {
 	/**
 	 * @return
 	 */
-	public static IAction getStopAction() {
+	public static MItem getStopAction() {
 		if (!isActionsInited()) {
 			initActions();
 		}
@@ -435,38 +436,50 @@ public class GanymedeUtilities {
 	/**
 	 * @param aAction
 	 */
-	public static void setStartAction(IAction aAction) {
+	public static void setStartAction(MItem aAction) {
 		mStartAction = aAction;
 	}
 
 	/**
 	 * @param aAction
 	 */
-	public static void setStopAction(IAction aAction) {
+	public static void setStopAction(MItem aAction) {
 		mStopAction = aAction;
 	}
 
 	/**
 	 * 
 	 */
-	public static void initActions() {
+	private static void initActions() {
 		setActionsInited(true);
-		GanymedeUtilities.setStartAction(((ActionContributionItem) getSite()
-				.getActionBars().getToolBarManager().find(
-						"Ganymede.StartAction")).getAction());
+		GanymedeUtilities.setStartAction(((HandledContributionItem)startToolbarItem()).getModel());
+		GanymedeUtilities.setStopAction(((HandledContributionItem)stopToolBarItem()).getModel());
 
-		GanymedeUtilities.setStopAction(((ActionContributionItem) getSite()
-				.getActionBars().getToolBarManager()
-				.find("Ganymede.StopAction")).getAction());
-
-		Log4jServer instance = Log4jServer.getLog4jServer();
-		if (instance != null && instance.isServerUp()) {
+		
+		if (log4jServerUpAndRunning()) {
 			getStartAction().setEnabled(false);
 			getStopAction().setEnabled(true);
 		} else {
 			getStartAction().setEnabled(true);
 			getStopAction().setEnabled(false);
 		}
+	}
+
+	public static IContributionItem stopToolBarItem() {
+		return getSite()
+				.getActionBars().getToolBarManager()
+				.find("Ganymede.StopAction.toolbarItem");
+	}
+
+	public static IContributionItem startToolbarItem() {
+		return getSite()
+				.getActionBars().getToolBarManager().find(
+						"Ganymede.StartAction.toolbarItem");
+	}
+	
+	public static boolean log4jServerUpAndRunning() {
+		Log4jServer instance = Log4jServer.getLog4jServer();
+		return instance != null && instance.isServerUp();
 	}
 
 	/**
@@ -514,7 +527,7 @@ public class GanymedeUtilities {
 	/**
 	 * @param le
 	 */
-	public static void addTableItem(LoggingEvent le) {
+	public static void addTableItem(LogEvent le) {
 		TableItem tableItem = createTableItem(0);
 
 		for (int i = 0; i < getTable().getColumnCount(); i++) {
