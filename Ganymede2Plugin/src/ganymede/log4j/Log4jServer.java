@@ -259,7 +259,7 @@ public class Log4jServer extends Thread
 			setActive(true);
 			try (	
 					InputStream socketStream = getSocket().getInputStream();
-//					InputStream buffered = new BufferedInputStream(socketStream);
+					InputStream buffered = new BufferedInputStream(socketStream);
 					CachingInputStream cachingStream = new CachingInputStream(socketStream);
 					ObjectInputStream ois = new ObjectInputStream(cachingStream);
 			)
