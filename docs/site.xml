@@ -6,5 +6,8 @@
    <feature url="features/com.gitbub.dbusche.ganymede2.feature_1.0.0.202204051014.jar" id="com.gitbub.dbusche.ganymede2.feature" version="1.0.0.202204051014">
       <category name="com.github.dbusche.ganymede2.update.category"/>
    </feature>
+   <feature url="features/com.github.dbusche.ganymede2.feature_1.0.0.202204061536.jar" id="com.github.dbusche.ganymede2.feature" version="1.0.0.202204061536">
+      <category name="com.github.dbusche.ganymede2.update.category"/>
+   </feature>
    <category-def name="com.github.dbusche.ganymede2.update.category" label="Ganymede2"/>
 </site>
