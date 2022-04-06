@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.gitbub.dbusche.ganymede2.feature_1.0.0.202204050945.jar" id="com.gitbub.dbusche.ganymede2.feature" version="1.0.0.202204050945">
+      <category name="com.github.dbusche.ganymede2.update.category"/>
+   </feature>
+   <feature url="features/com.gitbub.dbusche.ganymede2.feature_1.0.0.202204051014.jar" id="com.gitbub.dbusche.ganymede2.feature" version="1.0.0.202204051014">
+      <category name="com.github.dbusche.ganymede2.update.category"/>
+   </feature>
+   <category-def name="com.github.dbusche.ganymede2.update.category" label="Ganymede2"/>
+</site>
