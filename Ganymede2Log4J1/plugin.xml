@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="MYEXT"
+         name="LogEvent"
+         point="ganymede.extensionpoint.logevent.api">
+         <client class="ganymede2.log4j1.Log4jLogEventConverter" />
+    </extension>
+
+</plugin>
