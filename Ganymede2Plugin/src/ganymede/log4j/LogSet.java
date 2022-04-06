@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.logging.log4j.core.LogEvent;
+import ganymede.api.LogEvent;
 
 import ganymede.GanymedeUtilities;
 import ganymede.actions.PauseAction;

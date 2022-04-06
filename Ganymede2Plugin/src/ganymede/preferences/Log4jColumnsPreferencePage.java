@@ -1,9 +1,5 @@
 package ganymede.preferences;
 
-import ganymede.Ganymede;
-import ganymede.GanymedeUtilities;
-import ganymede.log4j.ColumnList;
-
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -21,6 +17,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import ganymede.Ganymede;
+import ganymede.GanymedeUtilities;
+import ganymede.log4j.ColumnList;
+import ganymede.log4j.Log4jItem;
 
 public class Log4jColumnsPreferencePage
 	extends PreferencePage
@@ -169,6 +170,17 @@ public class Log4jColumnsPreferencePage
 			Integer col = (Integer) i.next();
 			columnList.add(GanymedeUtilities.getLabelText(col.intValue()));
 		}
+	}
+	
+	@Override
+	protected void performDefaults() {
+		ColumnList.getInstance().clear();
+		ColumnList.getInstance().add(Log4jItem.LEVEL);
+		ColumnList.getInstance().add(Log4jItem.CATEGORY);
+		ColumnList.getInstance().add(Log4jItem.MESSAGE);
+		refreshList();
+		GanymedeUtilities.updateTableColumns();
+		super.performDefaults();
 	}
 
 //	/**

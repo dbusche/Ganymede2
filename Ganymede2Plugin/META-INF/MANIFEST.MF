@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ganymede2
 Bundle-SymbolicName: com.github.dbusche.ganymede2;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Automatic-Module-Name: Ganymede
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.ui;bundle-version="3.119.100",
@@ -15,10 +15,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.119.100",
  org.eclipse.ui.console;bundle-version="3.11.100"
 Bundle-ClassPath: lib/jakarta-regexp-1.2.jar,
  lib/junit.jar,
- lib/log4j-api-2.17.1.jar,
- lib/log4j-core-2.17.1.jar,
- lib/log4j-slf4j-impl-2.17.1.jar,
  ganymede.jar
 Bundle-Activator: ganymede.Ganymede
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.inject;version="1.0.0"
+Export-Package: ganymede.api

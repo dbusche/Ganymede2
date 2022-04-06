@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.StringTokenizer;
 
-import org.apache.logging.log4j.core.LogEvent;
+import ganymede.api.LogEvent;
 import org.apache.regexp.RE;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;

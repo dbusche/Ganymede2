@@ -1,6 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.logging.log4j.core.LogEvent;
+import ganymede.api.LogEvent;
 
 /**
  * @author Brandon
@@ -22,12 +22,12 @@ public class Log4jLineNumber implements Log4jItem {
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-    	StackTraceElement location = le.getSource();
-        if ( location == null ) {
-        	return "";
-        } else {
-        	return Integer.toString(location.getLineNumber());
-        }
+    	int lineNumber = le.getLineNumber();
+    	if (lineNumber == -1) {
+    		return "";
+    	} else {
+    		return Integer.toString(lineNumber);
+    	}
     }
 
 }

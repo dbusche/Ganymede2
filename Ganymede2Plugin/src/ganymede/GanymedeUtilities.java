@@ -5,8 +5,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.LogEvent;
 import org.eclipse.e4.ui.model.application.ui.menu.MItem;
 import org.eclipse.e4.ui.workbench.renderers.swt.HandledContributionItem;
 import org.eclipse.jface.action.IContributionItem;
@@ -23,6 +21,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 
 import ganymede.actions.ShowDetailAction;
+import ganymede.api.Level;
+import ganymede.api.LogEvent;
 import ganymede.log4j.ColumnList;
 import ganymede.log4j.Log4jCategory;
 import ganymede.log4j.Log4jDate;
@@ -30,7 +30,6 @@ import ganymede.log4j.Log4jItem;
 import ganymede.log4j.Log4jLevel;
 import ganymede.log4j.Log4jLineNumber;
 import ganymede.log4j.Log4jMessage;
-import ganymede.log4j.Log4jNDC;
 import ganymede.log4j.Log4jServer;
 import ganymede.log4j.Log4jThrowable;
 import ganymede.log4j.LogSet;
@@ -71,7 +70,6 @@ public class GanymedeUtilities {
 		v.add(Log4jItem.LABEL_MESSAGE);
 		v.add(Log4jItem.LABEL_LINE_NUMBER);
 		v.add(Log4jItem.LABEL_DATE);
-		v.add(Log4jItem.LABEL_NDC);
 		v.add(Log4jItem.LABEL_THROWABLE);
 		return v.iterator();
 	}
@@ -94,8 +92,6 @@ public class GanymedeUtilities {
 			return Log4jItem.LABEL_LINE_NUMBER;
 		case Log4jItem.DATE:
 			return Log4jItem.LABEL_DATE;
-		case Log4jItem.NDC:
-			return Log4jItem.LABEL_NDC;
 		case Log4jItem.THROWABLE:
 			return Log4jItem.LABEL_THROWABLE;
 		default:
@@ -121,8 +117,6 @@ public class GanymedeUtilities {
 			return Log4jItem.LINE_NUMBER;
 		} else if (colLabel.equals(Log4jItem.LABEL_DATE)) {
 			return Log4jItem.DATE;
-		} else if (colLabel.equals(Log4jItem.LABEL_NDC)) {
-			return Log4jItem.NDC;
 		} else if (colLabel.equals(Log4jItem.LABEL_THROWABLE)) {
 			return Log4jItem.THROWABLE;
 		} else {
@@ -142,8 +136,6 @@ public class GanymedeUtilities {
 			return new Log4jLineNumber(e);
 		case Log4jItem.DATE:
 			return new Log4jDate(e);
-		case Log4jItem.NDC:
-			return new Log4jNDC(e);
 		case Log4jItem.THROWABLE:
 			return new Log4jThrowable(e);
 		default:
@@ -170,7 +162,6 @@ public class GanymedeUtilities {
 		store.setDefault("colWidth." + Log4jItem.DATE, 75);
 		store.setDefault("colWidth." + Log4jItem.LINE_NUMBER, 75);
 		store.setDefault("colWidth." + Log4jItem.MESSAGE, 75);
-		store.setDefault("colWidth." + Log4jItem.NDC, 75);
 		store.setDefault("colWidth." + Log4jItem.THROWABLE, 75);
 		store.setDefault("colWidth." + Log4jItem.UNKNOWN, 75);
 	}

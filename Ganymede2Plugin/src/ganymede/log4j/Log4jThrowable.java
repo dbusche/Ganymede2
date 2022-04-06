@@ -1,6 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.logging.log4j.core.LogEvent;
+import ganymede.api.LogEvent;
 
 /**
  * @author Brandon

@@ -1,8 +1,5 @@
 package ganymede.dialogs;
 
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.impl.ExtendedStackTraceElement;
-import org.apache.logging.log4j.core.impl.ThrowableProxy;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -20,6 +17,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ganymede.GanymedeUtilities;
+import ganymede.api.ExtendedStackTraceElement;
+import ganymede.api.LogEvent;
+import ganymede.api.ThrowableProxy;
 
 /**
  * @author Brandon
@@ -87,12 +87,13 @@ public class Log4jEventDialog extends Dialog
 		label.setLayoutData(gData);
 
 		label = new Label(topDataComposite, SWT.NONE);
-		label.setText(getLogEvent().getLoggerName());
+		label.setText(getLogEvent().getCategory());
 		gData = new GridData();
 		gData.horizontalSpan = 2;
 		label.setLayoutData(gData);
 
-		if (getLogEvent().getSource() != null)
+		ExtendedStackTraceElement logSource = getLogEvent().getSource();
+		if (logSource != null)
 		{
 			label = new Label(topDataComposite, SWT.NONE);
 			label.setText("Location Information");
@@ -122,8 +123,7 @@ public class Log4jEventDialog extends Dialog
 			label.setLayoutData(gData);
 
 			label = new Label(topDataComposite, SWT.NONE);
-			label.setText(
-				getLogEvent().getSource().getFileName());
+			label.setText(logSource.getFileName());
 			gData = new GridData();
 			gData.horizontalSpan = 1;
 			label.setLayoutData(gData);
@@ -146,8 +146,7 @@ public class Log4jEventDialog extends Dialog
 			label.setLayoutData(gData);
 
 			label = new Label(topDataComposite, SWT.NONE);
-			label.setText(
-				getLogEvent().getSource().getClassName());
+			label.setText(logSource.getClassName());
 			gData = new GridData();
 			gData.horizontalSpan = 1;
 			label.setLayoutData(gData);
@@ -170,9 +169,7 @@ public class Log4jEventDialog extends Dialog
 			label.setLayoutData(gData);
 
 			label = new Label(topDataComposite, SWT.NONE);
-			label.setText(
-				getLogEvent().getSource().getMethodName()
-					+ "()");
+			label.setText(logSource.getMethodName() + "()");
 			gData = new GridData();
 			gData.horizontalSpan = 1;
 			label.setLayoutData(gData);
@@ -196,7 +193,7 @@ public class Log4jEventDialog extends Dialog
 
 			label = new Label(topDataComposite, SWT.NONE);
 			label.setText(
-				Integer.toString(getLogEvent().getSource().getLineNumber()));
+				Integer.toString(getLogEvent().getLineNumber()));
 			gData = new GridData();
 			gData.horizontalSpan = 1;
 			label.setLayoutData(gData);
@@ -221,7 +218,7 @@ public class Log4jEventDialog extends Dialog
 		text =
 			new Text(renderedMessageComposite,
 				SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL);
-		text.setText(getLogEvent().getMessage().getFormattedMessage());
+		text.setText(getLogEvent().getMessage());
 		text.setEditable(false);
 		gData = new GridData(GridData.FILL_BOTH);
 		gData.horizontalSpan = 3;
@@ -296,14 +293,14 @@ public class Log4jEventDialog extends Dialog
 			return "["
 				+ le.getLevel()
 				+ "] "
-				+ le.getLoggerName()
+				+ le.getCategory()
 				+ "(line #: "
 				+ le.getSource().getLineNumber()
 				+ ")";
 		}
 		else
 		{
-			return "[" + le.getLevel() + "] " + le.getLoggerName();
+			return "[" + le.getLevel() + "] " + le.getCategory();
 		}
 	}
 

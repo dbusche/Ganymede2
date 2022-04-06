@@ -1,6 +1,6 @@
 package ganymede.log4j;
 
-import org.apache.logging.log4j.core.LogEvent;
+import ganymede.api.LogEvent;
 
 /**
  * @author Brandon
@@ -22,7 +22,7 @@ public class Log4jCategory implements Log4jItem {
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-        return le.getLoggerName();
+        return le.getCategory();
     }
 
 }

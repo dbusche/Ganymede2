@@ -2,16 +2,27 @@ package ganymede.log4j;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.apache.logging.log4j.core.LogEvent;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.ISafeRunnableWithResult;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 
 import ganymede.Ganymede;
 import ganymede.GanymedeUtilities;
+import ganymede.api.LogEvent;
+import ganymede.api.LogEventConverter;
 import ganymede.preferences.Log4jPreferencePage;
 
 /**
@@ -19,7 +30,7 @@ import ganymede.preferences.Log4jPreferencePage;
  */
 public class Log4jServer extends Thread
 {
-
+	
 	/**
 	 * java.net
 	 */
@@ -195,12 +206,39 @@ public class Log4jServer extends Thread
 
 		public ClientConn(Socket s)
 		{
+			registeredConverters = new ArrayList<>();
+			for (IConfigurationElement e : Platform.getExtensionRegistry()
+					.getConfigurationElementsFor("ganymede.extensionpoint.logevent.api")) {
+				addConverterSafe(registeredConverters, e);
+			}
 			setSocket(s);
 		}
 
 		private Socket socket;
 
 		private boolean mActive = false;
+
+		private List<LogEventConverter> registeredConverters;
+
+		private void addConverterSafe(List<LogEventConverter> converters, IConfigurationElement converterConfig) {
+			ISafeRunnable runnable = new ISafeRunnable() {
+				@Override
+				public void handleException(Throwable e) {
+					System.out.println("Exception in client: " + e.getMessage());
+					e.printStackTrace();
+				}
+
+				@Override
+				public void run() throws Exception {
+					Object extension = converterConfig.createExecutableExtension("class");
+					if (extension instanceof LogEventConverter) {
+						registeredConverters.add((LogEventConverter) extension);
+					}
+				}
+			};
+			SafeRunner.run(runnable);
+		}
+		
 
 		public Socket getSocket()
 		{
@@ -218,33 +256,46 @@ public class Log4jServer extends Thread
 		 */
 		public void run()
 		{
-			ObjectInputStream ois = null;
 			setActive(true);
-			try
+			try (	
+					InputStream socketStream = getSocket().getInputStream();
+//					InputStream buffered = new BufferedInputStream(socketStream);
+					CachingInputStream cachingStream = new CachingInputStream(socketStream);
+					ObjectInputStream ois = new ObjectInputStream(cachingStream);
+			)
 			{
-				ois =
-					new ObjectInputStream(
-						new BufferedInputStream(getSocket().getInputStream()));
+				List<ObjectInputStream> streams = fetchDerivedStreams(cachingStream);
 				while (mServerUp && isActive())
 				{
 
-					LogEvent event = (LogEvent) ois.readObject();
-					newMessage(event);
+					Object serializedObject;
+					try {
+						serializedObject = ois.readObject();
+					} catch (ClassNotFoundException e) {
+						// expected, this call just loads the derived streams
+					}
+					
+					for (int i = 0 ; i < streams.size(); i++) {
+						LogEventConverter correspondingConverter = registeredConverters.get(i);
+						ObjectInputStream stream = streams.get(i);
+						LogEvent logEvent = createEventSafe(correspondingConverter, stream);
+						if (logEvent != null) {
+							newMessage(logEvent);
+						}
+					}
+					
+					cachingStream.resetCaches();
 				}
 			}
-			catch (java.io.IOException ioe)
+			catch (java.io.IOException io)
 			{
+				io.printStackTrace();
 				// Connection Dropped
-			}
-			catch (ClassNotFoundException cnf)
-			{
-				cnf.printStackTrace();
 			}
 			finally
 			{
 				try
 				{
-					ois.close();
 					if (!getSocket().isClosed())
 					{
 						getSocket().shutdownOutput();
@@ -261,6 +312,44 @@ public class Log4jServer extends Thread
 				//System.out.println("Client exited");
 			}
 		}
+
+		private List<ObjectInputStream> fetchDerivedStreams(CachingInputStream cachingStream) throws IOException {
+			List<ObjectInputStream> streams = new ArrayList<>(registeredConverters.size());
+			for (LogEventConverter converter : registeredConverters) {
+				ClassLoader classLoader = converter.getClass().getClassLoader();
+				streams.add(new ObjectInputStreamWithClassLoader(
+						cachingStream.newDerivedStream(), 
+						classLoader));
+			}
+			return streams;
+		}
+
+		private LogEvent createEventSafe(LogEventConverter converter, ObjectInputStream serializedObject) {
+			ISafeRunnableWithResult<LogEvent> runnable = new ISafeRunnableWithResult<>() {
+				@Override
+				public void handleException(Throwable e) {
+					System.out.println("Exception in client: " + e.getMessage());
+					e.printStackTrace();
+				}
+
+				@Override
+				public LogEvent runWithResult() throws Exception {
+					Object deserialized;
+					try {
+						deserialized = serializedObject.readObject();
+					} catch (ClassNotFoundException e) {
+						// can not be loaded, does not belong to plugin
+						return null;
+					}
+					if (!converter.getEventClass().isInstance(deserialized)) {
+						return null;
+					}
+					return converter.getLogEvent(deserialized);
+				}
+			};
+			return SafeRunner.run(runnable);
+		}
+
 		/**
 		 * @return
 		 */
@@ -276,6 +365,96 @@ public class Log4jServer extends Thread
 		{
 			mActive = aB;
 		}
+		
+		class CachingInputStream extends InputStream {
+
+			private static final int DEFAULT_BUFFER_SIZE = 8192;
+
+			private final InputStream _base;
+
+			byte[] _cache = new byte[DEFAULT_BUFFER_SIZE];
+
+			int _length;
+
+			List<DerivedStream> _derivedStreams = new ArrayList<>();
+
+			CachingInputStream(InputStream base) {
+				_base = base;
+			}
+
+			public DerivedStream newDerivedStream() {
+				DerivedStream stream = new DerivedStream();
+				_derivedStreams.add(stream);
+				return stream;
+			}
+
+			@Override
+			public int read() throws IOException {
+				int val = _base.read();
+				if (val == -1) {
+					return -1;
+				}
+				enlargeCache();
+				_cache[_length++] = (byte) val;
+				return val;
+			}
+
+			private void enlargeCache() {
+				if (_length == _cache.length) {
+					int newLength = _length * 2;
+					_cache = Arrays.copyOf(_cache, newLength);
+				}
+
+			}
+
+			@Override
+			public void close() throws IOException {
+				super.close();
+				_base.close();
+				for (InputStream derived : _derivedStreams) {
+					derived.close();
+				}
+			}
+
+			@Override
+			public int available() throws IOException {
+				return _base.available();
+			}
+
+			@Override
+			public long skip(long n) throws IOException {
+				return _base.skip(n);
+			}
+
+			void resetCaches() {
+				_length = 0;
+				_derivedStreams.forEach(DerivedStream::clear);
+			}
+
+			byte[] readBytes() {
+				return Arrays.copyOf(_cache, _length);
+			}
+
+			public class DerivedStream extends InputStream {
+
+				private int _next = 0;
+
+				@Override
+				public int read() throws IOException {
+					if (_next >= _length) {
+						return -1;
+					}
+					return _cache[_next++];
+				}
+
+				void clear() {
+					_next = 0;
+				}
+			}
+
+		}
+		
+		
 
 	}
 

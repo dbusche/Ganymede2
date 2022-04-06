@@ -1,6 +1,6 @@
 package ganymede.actions;
 
-import org.apache.logging.log4j.core.LogEvent;
+import ganymede.api.LogEvent;
 import org.eclipse.jface.action.Action;
 
 import ganymede.GanymedeUtilities;

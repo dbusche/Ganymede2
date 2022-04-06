@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="ganymede.extensionpoint.logevent.api" name="ganymede.extensionpoint.logevent.api" schema="schema/ganymede.extensionpoint.logevent.api.exsd"/>
 
     <extension
          id="Ganymede.views"

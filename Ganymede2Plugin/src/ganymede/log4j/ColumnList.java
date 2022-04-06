@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.apache.logging.log4j.core.LogEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import ganymede.GanymedeUtilities;
+import ganymede.api.LogEvent;
 
 /**
  * @author Brandon
@@ -89,6 +89,17 @@ public class ColumnList
 		Integer i = (Integer) columns.get(index);
 		columns.remove(index);
 		columns.insertElementAt(i, index + 1);
+	}
+	
+	public void clear() {
+		columns.clear();
+		if (GanymedeUtilities.isShowing())
+		{
+			Table table = GanymedeUtilities.getTable();
+			for (TableColumn col : table.getColumns()) {
+				col.dispose();
+			}
+		}
 	}
 
 	public Iterator getList()

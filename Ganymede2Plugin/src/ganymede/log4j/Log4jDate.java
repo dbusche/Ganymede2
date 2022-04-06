@@ -2,7 +2,7 @@ package ganymede.log4j;
 
 import java.sql.Timestamp;
 
-import org.apache.logging.log4j.core.LogEvent;
+import ganymede.api.LogEvent;
 
 /**
  * @author Brandon
@@ -24,7 +24,7 @@ public class Log4jDate implements Log4jItem {
      * @see ganymede.log4j.Log4jItem#getText()
      */
     public String getText() {
-        return new Timestamp(le.getTimeMillis()).toString();
+        return new Timestamp(le.getDate().getTime()).toString();
     }
 
 }
