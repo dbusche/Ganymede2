@@ -289,7 +289,6 @@ public class Log4jServer extends Thread
 			}
 			catch (java.io.IOException io)
 			{
-				io.printStackTrace();
 				// Connection Dropped
 			}
 			finally
@@ -372,7 +371,7 @@ public class Log4jServer extends Thread
 
 			private final InputStream _base;
 
-			byte[] _cache = new byte[DEFAULT_BUFFER_SIZE];
+			int[] _cache = new int[DEFAULT_BUFFER_SIZE];
 
 			int _length;
 
@@ -395,7 +394,7 @@ public class Log4jServer extends Thread
 					return -1;
 				}
 				enlargeCache();
-				_cache[_length++] = (byte) val;
+				_cache[_length++] =  val;
 				return val;
 			}
 
@@ -431,7 +430,7 @@ public class Log4jServer extends Thread
 				_derivedStreams.forEach(DerivedStream::clear);
 			}
 
-			byte[] readBytes() {
+			int[] readBytes() {
 				return Arrays.copyOf(_cache, _length);
 			}
 
