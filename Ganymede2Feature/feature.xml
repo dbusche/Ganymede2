@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.github.dbusche.ganymede2.feature"
-      label="Ganymede2Feature"
-      version="1.0.0.qualifier">
+      label="Ganymede2 - Socket Viewer for Eclipse"
+      version="1.1.0.qualifier"
+      plugin="com.github.dbusche.ganymede2">
 
    <description url="https://github.com/dbusche/Ganymede2">
-      Eclipse log viewer for log4j2.
+      A plugin to Eclipse that works similar to chainsaw (SocketServer). Includes color, filtering, detailed information, and saves settings.
+
+Bases on Ganymede, see http://ganymede.sourceforge.net/
    </description>
 
    <copyright url="https://github.com/dbusche/Ganymede2">
-      (C) 2009 by Brandon Opfermann and Eduardo Millan 
-      (C) 2022 by Daniel Busche and others
+      (C) 2009 by Brandon Opfermann and Eduardo Millan
+(C) 2022 by Daniel Busche and others
    </copyright>
 
    <license url="https://github.com/dbusche/Ganymede2/blob/main/LICENSE">
@@ -294,22 +297,24 @@ PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.
    </license>
 
+   <url>
+      <update url="https://dbusche.github.io/Ganymede2/"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.ui" version="3.119.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.23.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.15.100" match="greaterOrEqual"/>
+      <import plugin="org.junit" version="4.13.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.ui.model.workbench" version="2.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.ui.workbench.renderers.swt" version="0.15.200" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.ui.console" version="3.11.100" match="greaterOrEqual"/>
+      <import plugin="javax.inject"/>
+   </requires>
+
    <plugin
          id="com.github.dbusche.ganymede2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.github.dbusche.ganymede2.log4j1"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.github.dbusche.ganymede2.log4j2"
          download-size="0"
          install-size="0"
          version="0.0.0"
