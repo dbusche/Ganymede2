@@ -3,5 +3,9 @@
    <feature url="features/com.github.dbusche.ganymede2.feature_1.0.0.202204071006.jar" id="com.github.dbusche.ganymede2.feature" version="1.0.0.202204071006">
       <category name="com.github.dbusche.ganymede2.update.category"/>
    </feature>
-   <category-def name="com.github.dbusche.ganymede2.update.category" label="Ganymede2"/>
+   <category-def name="com.github.dbusche.ganymede2.update.category" label="Ganymede2 - Log viewer for eclipse">
+      <description>
+         Ganymede2 - Log viewer for eclipse
+      </description>
+   </category-def>
 </site>
