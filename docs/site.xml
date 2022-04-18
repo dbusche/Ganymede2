@@ -9,6 +9,9 @@
    <feature url="features/com.github.dbusche.ganymede2.log4j2.feature_1.1.0.qualifier.jar" id="com.github.dbusche.ganymede2.log4j2.feature" version="1.1.0.qualifier">
       <category name="com.github.dbusche.ganymede2.update.category"/>
    </feature>
+   <feature url="features/com.github.dbusche.ganymede2.logback.feature_1.1.0.qualifier.jar" id="com.github.dbusche.ganymede2.logback.feature" version="1.1.0.qualifier">
+      <category name="com.github.dbusche.ganymede2.update.category"/>
+   </feature>
    <category-def name="com.github.dbusche.ganymede2.update.category" label="Ganymede2 - Log viewer for eclipse">
       <description>
          Ganymede2 - Log viewer for eclipse
