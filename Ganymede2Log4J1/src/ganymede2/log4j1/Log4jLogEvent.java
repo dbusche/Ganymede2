@@ -7,6 +7,7 @@ import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
+import ganymede.api.AbstractThrowableProxy;
 import ganymede.api.ExtendedStackTraceElement;
 import ganymede.api.Level;
 import ganymede.api.LogEvent;
@@ -67,7 +68,7 @@ public class Log4jLogEvent implements LogEvent {
 		int line;
 		if (lineNumber == null) {
 			line = -1;
-		} else  if (LocationInfo.NA.equals(lineNumber)){
+		} else if (LocationInfo.NA.equals(lineNumber)) {
 			line = -1;
 		} else {
 			line = Integer.parseInt(lineNumber);
@@ -96,7 +97,7 @@ public class Log4jLogEvent implements LogEvent {
 		return _throwableProxy;
 	}
 
-	static class Log4jThrowableProxy implements ThrowableProxy {
+	static class Log4jThrowableProxy extends AbstractThrowableProxy {
 
 		private Throwable _proxy;
 
@@ -104,7 +105,7 @@ public class Log4jLogEvent implements LogEvent {
 			this._proxy = proxy;
 		}
 
-		public static ThrowableProxy toThrowableProxy(Throwable proxy) {
+		public static Log4jThrowableProxy toThrowableProxy(Throwable proxy) {
 			if (proxy == null) {
 				return null;
 			}
@@ -112,7 +113,17 @@ public class Log4jLogEvent implements LogEvent {
 		}
 
 		@Override
-		public ThrowableProxy getCauseProxy() {
+		public String getClassName() {
+			return _proxy.getClass().getName();
+		}
+
+		@Override
+		public String getLocalizedMessage() {
+			return _proxy.getLocalizedMessage();
+		}
+
+		@Override
+		public Log4jThrowableProxy getCauseProxy() {
 			return toThrowableProxy(_proxy.getCause());
 		}
 
@@ -123,14 +134,12 @@ public class Log4jLogEvent implements LogEvent {
 
 	}
 
-	public static ExtendedStackTraceElement toExtendedStackTraceElement(
-			StackTraceElement element) {
+	public static ExtendedStackTraceElement toExtendedStackTraceElement(StackTraceElement element) {
 		return new SimpleExtendedStackElement(element.getClassName(), element.getMethodName(), element.getLineNumber(),
 				element.getFileName());
 	}
 
-	public static ExtendedStackTraceElement[] toExtendedStackTraceElement(
-			StackTraceElement[] elements) {
+	public static ExtendedStackTraceElement[] toExtendedStackTraceElement(StackTraceElement[] elements) {
 		return Arrays.stream(elements).map(Log4jLogEvent::toExtendedStackTraceElement)
 				.toArray(ExtendedStackTraceElement[]::new);
 	}

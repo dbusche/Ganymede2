@@ -14,6 +14,10 @@ public class SimpleExtendedStackElement implements ExtendedStackTraceElement {
 		this._fileName = fileName;
 	}
 
+	public SimpleExtendedStackElement(StackTraceElement base) {
+		this(base.getClassName(), base.getMethodName(), base.getLineNumber(), base.getFileName());
+	}
+
 	@Override
 	public String getClassName() {
 		return _className;

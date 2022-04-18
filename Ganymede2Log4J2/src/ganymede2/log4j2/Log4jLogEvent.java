@@ -3,6 +3,7 @@ package ganymede2.log4j2;
 import java.util.Arrays;
 import java.util.Date;
 
+import ganymede.api.AbstractThrowableProxy;
 import ganymede.api.ExtendedStackTraceElement;
 import ganymede.api.Level;
 import ganymede.api.LogEvent;
@@ -62,7 +63,8 @@ public class Log4jLogEvent implements LogEvent {
 		if (source == null) {
 			return null;
 		}
-		return new SimpleExtendedStackElement(source.getClassName(), source.getMethodName(), source.getLineNumber(), source.getFileName());
+		return new SimpleExtendedStackElement(source.getClassName(), source.getMethodName(), source.getLineNumber(),
+				source.getFileName());
 	}
 
 	@Override
@@ -85,7 +87,7 @@ public class Log4jLogEvent implements LogEvent {
 		return _throwableProxy;
 	}
 
-	static class Log4jThrowableProxy implements ThrowableProxy {
+	static class Log4jThrowableProxy extends AbstractThrowableProxy {
 
 		private org.apache.logging.log4j.core.impl.ThrowableProxy proxy;
 
@@ -93,7 +95,7 @@ public class Log4jLogEvent implements LogEvent {
 			this.proxy = proxy;
 		}
 
-		public static ThrowableProxy toThrowableProxy(org.apache.logging.log4j.core.impl.ThrowableProxy proxy) {
+		public static Log4jThrowableProxy toThrowableProxy(org.apache.logging.log4j.core.impl.ThrowableProxy proxy) {
 			if (proxy == null) {
 				return null;
 			}
@@ -101,7 +103,17 @@ public class Log4jLogEvent implements LogEvent {
 		}
 
 		@Override
-		public ThrowableProxy getCauseProxy() {
+		public String getClassName() {
+			return proxy.getName();
+		}
+
+		@Override
+		public String getLocalizedMessage() {
+			return proxy.getLocalizedMessage();
+		}
+
+		@Override
+		public Log4jThrowableProxy getCauseProxy() {
 			return toThrowableProxy(proxy.getCauseProxy());
 		}
 
