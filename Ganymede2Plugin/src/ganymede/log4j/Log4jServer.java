@@ -4,13 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.ISafeRunnableWithResult;
@@ -75,10 +75,13 @@ public class Log4jServer extends Thread
 					Ganymede.getDefault().getPreferenceStore().getInt(
 						Log4jPreferencePage.P_PORT);
 				setLog4jServer(new Log4jServer());
-				getLog4jServer().setServerUp(true);
 				setServerSocket(new ServerSocket(port));
 				getServerSocket().setReuseAddress(true);
+				getLog4jServer().setServerUp(true);
 			getLog4jServer().start();
+		} catch (BindException be) {
+			// Port already in use
+			return false;
 		}
 		catch (IOException ioe)
 		{
