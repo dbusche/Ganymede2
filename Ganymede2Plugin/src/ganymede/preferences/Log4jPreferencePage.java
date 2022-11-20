@@ -62,6 +62,7 @@ public class Log4jPreferencePage extends FieldEditorPreferencePage implements
 	 */
 	static public void initializeDefaults() {
 		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+		store.setDefault(P_AUTOMATIC, false);
 		store.setDefault(P_PORT, 4445);
 		if (store.getString(P_TYPE).equals(P_TYPE_SOCKET_APPENDER_VAL)
 				&& GanymedeUtilities.getServerType() != Ganymede.P_SERVER_TYPE_SOCKET_APPENDER) {

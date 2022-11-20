@@ -16,11 +16,6 @@ public class LifecycleListener implements IPartListener
 
 	public void partActivated(IWorkbenchPart part)
 	{
-		boolean automatic = Ganymede.getDefault().getPreferenceStore().getBoolean(Log4jPreferencePage.P_AUTOMATIC);
-        if (automatic)
-        {
-            Log4jServer.startListener();
-        }
 	}
 
 	public void partBroughtToTop(IWorkbenchPart part)

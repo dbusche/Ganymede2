@@ -45,14 +45,15 @@ public class LogSet
 		mAllLogs.add(le); // add to entire set regardless of filters
 		if (getFilterset().isValidForShow(le))
 		{
-			if (GanymedeUtilities.isShowing() && !PauseAction.isPaused())
-			{
-				GanymedeUtilities.addTableItem(le);
+			if (GanymedeUtilities.isShowing()) {
+				if (PauseAction.isPaused()) {
+					mHiddenLogs.insertElementAt(le, 0);
+				} else {
+					GanymedeUtilities.addTableItem(le);
+					mShowingLogs.insertElementAt(le, 0);
+				}
+			} else {
 				mShowingLogs.insertElementAt(le, 0);
-			}
-			else if (PauseAction.isPaused())
-			{
-				mHiddenLogs.insertElementAt(le, 0);
 			}
 		}
 	}

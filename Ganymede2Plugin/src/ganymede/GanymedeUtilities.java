@@ -3,6 +3,7 @@ package ganymede;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Vector;
 
 import org.eclipse.e4.ui.model.application.ui.menu.MItem;
@@ -50,10 +51,6 @@ public class GanymedeUtilities {
 	private static ShowDetailAction mShowDetailAction;
 
 	private static Hashtable<String, Color> colors = new Hashtable<>(5);
-
-	private static MItem mStartAction;
-
-	private static MItem mStopAction;
 
 	private static IViewSite mSite;
 
@@ -404,68 +401,47 @@ public class GanymedeUtilities {
 		return new TableItem(getTable(), SWT.NONE, index);
 	}
 
-	/**
-	 * @return
-	 */
-	public static MItem getStartAction() {
-		if (!isActionsInited()) {
-			initActions();
+	private static Optional<MItem> getStartAction() {
+		return getAction("Ganymede.StartAction.toolbarItem");
+	}
+
+	private static Optional<MItem> getStopAction() {
+		return getAction("Ganymede.StopAction.toolbarItem");
+	}
+
+	private static Optional<MItem> getAction(String id) {
+		GanymedeView view = getView();
+		if (view == null) {
+			return Optional.empty();
 		}
-		return mStartAction;
-	}
-
-	/**
-	 * @return
-	 */
-	public static MItem getStopAction() {
-		if (!isActionsInited()) {
-			initActions();
-		}
-		return mStopAction;
-	}
-
-	/**
-	 * @param aAction
-	 */
-	public static void setStartAction(MItem aAction) {
-		mStartAction = aAction;
-	}
-
-	/**
-	 * @param aAction
-	 */
-	public static void setStopAction(MItem aAction) {
-		mStopAction = aAction;
-	}
-
-	/**
-	 * 
-	 */
-	private static void initActions() {
-		setActionsInited(true);
-		GanymedeUtilities.setStartAction(((HandledContributionItem)startToolbarItem()).getModel());
-		GanymedeUtilities.setStopAction(((HandledContributionItem)stopToolBarItem()).getModel());
-
-		
-		if (log4jServerUpAndRunning()) {
-			getStartAction().setEnabled(false);
-			getStopAction().setEnabled(true);
+		IContributionItem startToolbarItem = view.getViewSite().getActionBars().getToolBarManager().find(id);
+		if (startToolbarItem != null) {
+			return Optional.ofNullable(((HandledContributionItem)startToolbarItem).getModel());
 		} else {
-			getStartAction().setEnabled(true);
-			getStopAction().setEnabled(false);
+			return Optional.empty();
 		}
 	}
-
-	public static IContributionItem stopToolBarItem() {
-		return getSite()
-				.getActionBars().getToolBarManager()
-				.find("Ganymede.StopAction.toolbarItem");
+	
+	public static void updateStartStopActions() {
+		updateStartStopAction(log4jServerUpAndRunning());
 	}
-
-	public static IContributionItem startToolbarItem() {
-		return getSite()
-				.getActionBars().getToolBarManager().find(
-						"Ganymede.StartAction.toolbarItem");
+	
+	private static void updateStartStopAction(boolean serverRunning) {
+		if (serverRunning) {
+			getStartAction().ifPresent(GanymedeUtilities::disableAction);
+			getStopAction().ifPresent(GanymedeUtilities::enableAction);
+		} else {
+			getStartAction().ifPresent(GanymedeUtilities::enableAction);
+			getStopAction().ifPresent(GanymedeUtilities::disableAction);
+		}
+	}
+	
+	private static void disableAction(MItem action) {
+		action.setEnabled(false);
+	}
+	
+	private static void enableAction(MItem action) {
+		action.setEnabled(true);
 	}
 	
 	public static boolean log4jServerUpAndRunning() {

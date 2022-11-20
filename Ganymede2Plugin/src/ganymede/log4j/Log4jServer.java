@@ -89,8 +89,7 @@ public class Log4jServer extends Thread
 			return false;
 		}
 		
-		GanymedeUtilities.getStartAction().setEnabled(false);
-		GanymedeUtilities.getStopAction().setEnabled(true);
+		GanymedeUtilities.updateStartStopActions();
 		return true;
 	}
 
@@ -120,8 +119,8 @@ public class Log4jServer extends Thread
 			//System.out.println("Nothing to stop");
 		}
 
-		GanymedeUtilities.getStartAction().setEnabled(true);
-		GanymedeUtilities.getStopAction().setEnabled(false);
+		GanymedeUtilities.updateStartStopActions();
+
 	}
 
 	/**
@@ -132,14 +131,12 @@ public class Log4jServer extends Thread
 	 */
 	static synchronized public void newMessage(LogEvent le)
 	{
-		final LogEvent thisEvent = le;
-		Display.findDisplay(getPrimary()).asyncExec(new Runnable()
-		{
-			public void run()
-			{
-				LogSet.getInstance().addLogEvent(thisEvent);
-			}
-		});
+		Display display = Display.findDisplay(getPrimary());
+		if (display == null) {
+			LogSet.getInstance().addLogEvent(le);
+		} else  {
+			display.asyncExec(() -> LogSet.getInstance().addLogEvent(le));
+		} 
 	}
 
 	/**

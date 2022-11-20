@@ -26,7 +26,6 @@ import ganymede.listeners.LifecycleListener;
 import ganymede.log4j.ColumnList;
 import ganymede.log4j.Log4jServer;
 import ganymede.preferences.Log4jColumnsPreferencePage;
-import ganymede.preferences.Log4jPreferencePage;
 
 public class GanymedeView extends ViewPart
 {
@@ -60,12 +59,11 @@ public class GanymedeView extends ViewPart
 	public GanymedeView()
 	{
 		super();
-		Log4jPreferencePage.initializeDefaults();
 		GanymedeUtilities.setView(this);
 	}
 
 	/**
-	 * This is a cal lback that will allow us to create the viewer and
+	 * This is a callback that will allow us to create the viewer and
 	 * initialize it.
 	 */
 	public void createPartControl(Composite parent)

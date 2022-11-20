@@ -8,6 +8,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import ganymede.log4j.Log4jServer;
+import ganymede.preferences.Log4jPreferencePage;
+
 /**
  * The main plugin class to be used in the desktop.
  */
@@ -46,6 +49,12 @@ public class Ganymede extends AbstractUIPlugin
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		Log4jPreferencePage.initializeDefaults();
+		boolean automatic = getPreferenceStore().getBoolean(Log4jPreferencePage.P_AUTOMATIC);
+        if (automatic)
+        {
+            Log4jServer.startListener();
+        }
 	}
 
 	/**
@@ -53,6 +62,7 @@ public class Ganymede extends AbstractUIPlugin
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+		Log4jServer.stopListener();
 	}
 
 	/**
