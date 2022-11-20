@@ -9,7 +9,9 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IViewSite;
@@ -22,7 +24,6 @@ import ganymede.GanymedeUtilities;
 import ganymede.actions.QuickFilterAction;
 import ganymede.actions.ShowDetailAction;
 import ganymede.listeners.IMouseListener;
-import ganymede.listeners.LifecycleListener;
 import ganymede.log4j.ColumnList;
 import ganymede.log4j.Log4jServer;
 import ganymede.preferences.Log4jColumnsPreferencePage;
@@ -119,14 +120,11 @@ public class GanymedeView extends ViewPart
 			ColumnList.deSerialize(
 				store.getString(Log4jColumnsPreferencePage.P_COLUMNS)));
 
+		TableColumn[] columns = new TableColumn[ColumnList.getInstance().getColumnCount()];
 		// Create ColumnList.COL_COUNT columns
-		for (int i = 0; i < ColumnList.getInstance().getColumnCount(); i++)
-		{
-			new TableColumn(table, SWT.NONE);
+		for (int i = 0; i < columns.length; i++) {
+			columns[i] = new TableColumn(table, SWT.NONE);
 		}
-
-		// things that happen to use throughout our life
-		getSite().getPage().addPartListener(new LifecycleListener());
 
 		Log4jServer.init(); // needs workspace thread info
 
@@ -144,7 +142,22 @@ public class GanymedeView extends ViewPart
 		GanymedeUtilities.setViewTitle(table.getParent().getShell().getText());
 
 		hookDoubleClickAction(); // to bring up details
+		
+		for (int i = 0 ; i < columns.length; i++) {
+			int colIndex = i;
+			columns[colIndex].addListener(SWT.Dispose, new Listener() {
+				
+				private TableColumn _column = columns[colIndex];
+				
+				@Override
+				public void handleEvent(Event event) {
+					int colType = ColumnList.getInstance().getColType(colIndex);
+					store.setValue(GanymedeUtilities.colWithAttributeName(colType), _column.getWidth());
+				}
+			});
 
+		}
+		
 	}
 
 	private void hookDoubleClickAction()

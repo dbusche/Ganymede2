@@ -163,21 +163,8 @@ public class GanymedeUtilities {
 		store.setDefault("colWidth." + Log4jItem.UNKNOWN, 75);
 	}
 
-	/**
-	 * Saves column widths
-	 */
-	static public void saveTableColumnWidths() {
-		if (isShowing()) {
-			setTableColumnWidthDefaults();
-			IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
-			TableColumn[] tc = getTable().getColumns();
-			ColumnList list = ColumnList.getInstance();
-			Iterator<Integer> iter = list.getList();
-			for (int i = 0; i < list.getColumnCount(); i++) {
-				int val = iter.next().intValue();
-				store.setValue("colWidth." + val, tc[i].getWidth());
-			}
-		}
+	public static String colWithAttributeName(int colType) {
+		return "colWidth." + colType;
 	}
 
 	/**
@@ -192,7 +179,7 @@ public class GanymedeUtilities {
 			Iterator<Integer> iter = list.getList();
 			for (int i = 0; i < list.getColumnCount(); i++) {
 				int val = iter.next().intValue();
-				int width = store.getInt("colWidth." + val);
+				int width = store.getInt(colWithAttributeName(val));
 				tc[i].setWidth(width);
 			}
 		}
