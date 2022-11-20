@@ -40,7 +40,7 @@ public class Log4jColumnsPreferencePage
 
 	public void init(IWorkbench workbench)
 	{
-		setPreferenceStore(Ganymede.getDefault().getPreferenceStore());
+		setPreferenceStore(Ganymede.preferences());
 	}
 
 	protected Control createContents(Composite parent)
@@ -203,7 +203,7 @@ public class Log4jColumnsPreferencePage
 
 	private void storeValues()
 	{
-		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+		IPreferenceStore store = Ganymede.preferences();
 		store.setValue(
 			P_COLUMNS,
 			ColumnList.serialize(ColumnList.getInstance().getCols()));

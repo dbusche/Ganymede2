@@ -67,7 +67,7 @@ public class GanymedeView extends ViewPart
 	public void createPartControl(Composite parent)
 	{
 		GanymedeUtilities.setView(this);
-		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+		IPreferenceStore store = Ganymede.preferences();
 		
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);

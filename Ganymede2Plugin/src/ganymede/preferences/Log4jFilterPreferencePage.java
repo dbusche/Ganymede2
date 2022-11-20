@@ -71,7 +71,7 @@ public class Log4jFilterPreferencePage
         filterList = new List(entryTable, SWT.BORDER);
         filterList.setItems(
             convert(
-                Ganymede.getDefault().getPreferenceStore().getString(
+            		Ganymede.preferences().getString(
                     P_FILTERS)));
 
         //Create a data that takes up the extra space in the dialog and spans both columns.
@@ -148,7 +148,7 @@ public class Log4jFilterPreferencePage
     }
 
     public void init(IWorkbench workbench) {
-        setPreferenceStore(Ganymede.getDefault().getPreferenceStore());
+        setPreferenceStore(Ganymede.preferences());
     }
 
     public String[] getDefaultFilters() {

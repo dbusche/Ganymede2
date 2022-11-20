@@ -148,7 +148,7 @@ public class GanymedeUtilities {
 	 * or save any
 	 */
 	static public void setTableColumnWidthDefaults() {
-		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+		IPreferenceStore store = Ganymede.preferences();
 		store.setDefault("colWidth." + Log4jItem.LEVEL, 75);
 		store.setDefault("colWidth." + Log4jItem.CATEGORY, 75);
 		store.setDefault("colWidth." + Log4jItem.DATE, 75);
@@ -168,7 +168,7 @@ public class GanymedeUtilities {
 	static public void updateTableColumnWidths() {
 		if (isShowing()) {
 			setTableColumnWidthDefaults();
-			IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+			IPreferenceStore store = Ganymede.preferences();
 			TableColumn[] tc = getTable().getColumns();
 			ColumnList list = ColumnList.getInstance();
 			Iterator<Integer> iter = list.getList();
@@ -245,7 +245,7 @@ public class GanymedeUtilities {
 	}
 
 	static public void updateColors() {
-		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+		IPreferenceStore store = Ganymede.preferences();
 
 		colors.clear();
 		colors.put(Level.DEBUG.toString(), new Color(Display.getCurrent(),
@@ -283,7 +283,7 @@ public class GanymedeUtilities {
 	}
 
 	static public void initColorDefaults() {
-		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+		IPreferenceStore store = Ganymede.preferences();
 		PreferenceConverter.setDefault(store,
 				ColorPreferencePage.DEBUG_COLOR_KEY, new RGB(0, 0, 0));
 		PreferenceConverter.setDefault(store,

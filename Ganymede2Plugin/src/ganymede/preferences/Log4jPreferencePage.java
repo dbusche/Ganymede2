@@ -52,7 +52,7 @@ public class Log4jPreferencePage extends FieldEditorPreferencePage implements
 
 	public Log4jPreferencePage() {
 		super(GRID);
-		setPreferenceStore(Ganymede.getDefault().getPreferenceStore());
+		setPreferenceStore(Ganymede.preferences());
 		setDescription("Log4j Viewer (Ganymede)");
 		initializeDefaults();
 	}
@@ -61,7 +61,7 @@ public class Log4jPreferencePage extends FieldEditorPreferencePage implements
 	 * Sets the default values of the preferences.
 	 */
 	static public void initializeDefaults() {
-		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
+		IPreferenceStore store = Ganymede.preferences();
 		store.setDefault(P_AUTOMATIC, false);
 		store.setDefault(P_PORT, 4445);
 		if (store.getString(P_TYPE).equals(P_TYPE_SOCKET_APPENDER_VAL)

@@ -76,7 +76,7 @@ public class Log4jServer extends Thread
 		try
 		{
 			int port =
-					Ganymede.getDefault().getPreferenceStore().getInt(
+					Ganymede.preferences().getInt(
 						Log4jPreferencePage.P_PORT);
 				setLog4jServer(new Log4jServer(threadName("log4jServer")));
 				setServerSocket(new ServerSocket(port));

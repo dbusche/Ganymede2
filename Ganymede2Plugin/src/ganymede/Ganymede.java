@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -72,6 +73,10 @@ public class Ganymede extends AbstractUIPlugin
 	{
 		return plugin;
 	}
+	
+	public static IPreferenceStore preferences() {
+		return getDefault().getPreferenceStore();
+	}
 
 	/**
 	 * Returns the workspace instance.
@@ -81,9 +86,6 @@ public class Ganymede extends AbstractUIPlugin
 		return ResourcesPlugin.getWorkspace();
 	}
 	
-	public static void markServerStarted(boolean b) {
-	}
-
 	/**
 	 * Returns the string from the plugin's resource bundle,
 	 * or 'key' if not found.

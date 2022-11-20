@@ -16,7 +16,7 @@ public class ColorPreferencePage
 	public ColorPreferencePage()
 	{
 		super(GRID);
-		setPreferenceStore(Ganymede.getDefault().getPreferenceStore());
+		setPreferenceStore(Ganymede.preferences());
 		setDescription("Color Preferences");
 		initializeDefaults();
 	}
