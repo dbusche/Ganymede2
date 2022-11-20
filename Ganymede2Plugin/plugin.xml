@@ -217,6 +217,12 @@
             type="java.util.Collection">
       </propertyTester>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="ganymede.StartPluginOnWorkbechStartup">
+      </startup>
+   </extension>
 
 </plugin>
 
