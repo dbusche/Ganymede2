@@ -15,10 +15,10 @@ import ganymede.actions.PauseAction;
 public class LogSet
 {
 
-	Vector mAllLogs = new Vector();
-	Vector mShowingLogs = new Vector();
-	Vector mHiddenLogs = new Vector();
-	Vector mListeners = new Vector();
+	Vector<LogEvent> mAllLogs = new Vector<>();
+	Vector<LogEvent> mShowingLogs = new Vector<>();
+	Vector<LogEvent> mHiddenLogs = new Vector<>();
+	Vector<LogEvent> mListeners = new Vector<>();
 	FilterSet mFilterset = new FilterSet();
 
 	static private LogSet mInstance = null;
@@ -85,12 +85,12 @@ public class LogSet
 
 	public LogEvent getLogEventShowingAt(int idx)
 	{
-		return (LogEvent) mShowingLogs.get(idx);
+		return mShowingLogs.get(idx);
 	}
 
-	public Collection getValidLogs()
+	public Collection<LogEvent> getValidLogs()
 	{
-		Vector rSet = new Vector();
+		Vector<LogEvent> rSet = new Vector<>();
         
 		if (!PauseAction.isPaused())
 		{
@@ -110,11 +110,11 @@ public class LogSet
 	{
 		mShowingLogs.clear();
         mHiddenLogs.clear();
-		Iterator allLogs = mAllLogs.iterator();
+		Iterator<LogEvent> allLogs = mAllLogs.iterator();
 		LogEvent thisEvent;
 		while (allLogs.hasNext())
 		{
-			thisEvent = (LogEvent) allLogs.next();
+			thisEvent = allLogs.next();
 			if (getFilterset().isValidForShow(thisEvent))
 			{
 				mShowingLogs.insertElementAt(thisEvent, 0);

@@ -49,7 +49,7 @@ public class GanymedeUtilities {
 
 	private static ShowDetailAction mShowDetailAction;
 
-	private static Hashtable colors = new Hashtable(5);
+	private static Hashtable<String, Color> colors = new Hashtable<>(5);
 
 	private static MItem mStartAction;
 
@@ -63,8 +63,8 @@ public class GanymedeUtilities {
 
 	private static int mServerType = Ganymede.P_SERVER_TYPE_SOCKET_APPENDER;
 
-	static public Iterator getColumnLabels() {
-		Vector v = new Vector();
+	static public Iterator<String> getColumnLabels() {
+		Vector<String> v = new Vector<>();
 		v.add(Log4jItem.LABEL_LEVEL);
 		v.add(Log4jItem.LABEL_CATEGORY);
 		v.add(Log4jItem.LABEL_MESSAGE);
@@ -175,9 +175,9 @@ public class GanymedeUtilities {
 			IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
 			TableColumn[] tc = getTable().getColumns();
 			ColumnList list = ColumnList.getInstance();
-			Iterator iter = list.getList();
+			Iterator<Integer> iter = list.getList();
 			for (int i = 0; i < list.getColumnCount(); i++) {
-				int val = ((Integer) iter.next()).intValue();
+				int val = iter.next().intValue();
 				store.setValue("colWidth." + val, tc[i].getWidth());
 			}
 		}
@@ -192,9 +192,9 @@ public class GanymedeUtilities {
 			IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
 			TableColumn[] tc = getTable().getColumns();
 			ColumnList list = ColumnList.getInstance();
-			Iterator iter = list.getList();
+			Iterator<Integer> iter = list.getList();
 			for (int i = 0; i < list.getColumnCount(); i++) {
-				int val = ((Integer) iter.next()).intValue();
+				int val = iter.next().intValue();
 				int width = store.getInt("colWidth." + val);
 				tc[i].setWidth(width);
 			}
@@ -205,9 +205,9 @@ public class GanymedeUtilities {
 		if (isShowing()) {
 			TableColumn[] tc = getTable().getColumns();
 			ColumnList list = ColumnList.getInstance();
-			Iterator iter = list.getList();
+			Iterator<Integer> iter = list.getList();
 			for (int i = 0; i < list.getColumnCount(); i++) {
-				int val = ((Integer) iter.next()).intValue();
+				int val = iter.next().intValue();
 				tc[i].setText(GanymedeUtilities.getLabelText(val));
 				updateTableColumnWidths();
 			}
@@ -316,11 +316,11 @@ public class GanymedeUtilities {
 		// reset display
 		if (isShowing()) {
 			LogSet logSet = LogSet.getInstance();
-			Collection validLogs = logSet.getValidLogs();
+			Collection<LogEvent> validLogs = logSet.getValidLogs();
 			TableItem[] items = getTable().getItems();
 			int idx = 0;
-			for (Iterator logIter = validLogs.iterator(); logIter.hasNext(); idx++) {
-				LogEvent le = (LogEvent) logIter.next();
+			for (Iterator<LogEvent> logIter = validLogs.iterator(); logIter.hasNext(); idx++) {
+				LogEvent le = logIter.next();
 				items[idx].setForeground(GanymedeUtilities.getColor(le
 						.getLevel()));
 			}
@@ -328,7 +328,7 @@ public class GanymedeUtilities {
 	}
 
 	static public Color getColor(Level level) {
-		return (Color) colors.get(level.toString());
+		return colors.get(level.toString());
 	}
 
 	static public void initColorDefaults() {
@@ -365,13 +365,13 @@ public class GanymedeUtilities {
 			boolean visible = getTable().getVisible();
 			getTable().setVisible(false);
 			LogSet logSet = LogSet.getInstance();
-			Collection validLogs = logSet.getValidLogs();
+			Collection<LogEvent> validLogs = logSet.getValidLogs();
 			int itemCount = getTable().getItemCount();
 			TableItem[] items = getTable().getItems();
 			TableItem thisItem;
 			int idx = 0;
-			for (Iterator logIter = validLogs.iterator(); logIter.hasNext(); idx++) {
-				LogEvent le = (LogEvent) logIter.next();
+			for (Iterator<LogEvent> logIter = validLogs.iterator(); logIter.hasNext(); idx++) {
+				LogEvent le = logIter.next();
 				if (idx < itemCount) // reuse if possible
 				{
 					thisItem = items[idx];

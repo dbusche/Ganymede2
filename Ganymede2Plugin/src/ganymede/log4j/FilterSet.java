@@ -11,7 +11,7 @@ import ganymede.api.LogEvent;
 public class FilterSet
 {
 
-	private Vector filters = new Vector(1);
+	private Vector<Filter> filters = new Vector<>(1);
 
 	private Filter mQuickFilter;
 
@@ -26,10 +26,10 @@ public class FilterSet
 
 	public void removeFilter(Filter filter)
 	{
-		Iterator i = filters.iterator();
+		Iterator<Filter> i = filters.iterator();
 		while (i.hasNext())
 		{
-			Filter f = (Filter) i.next();
+			Filter f = i.next();
 			if (filter.equals(f))
 			{
 				filters.remove(f);
@@ -40,20 +40,20 @@ public class FilterSet
 
 	public Filter[] getFilters()
 	{
-		return (Filter[]) filters.toArray(new Filter[0]);
+		return filters.toArray(new Filter[filters.size()]);
 	}
 
-	public Iterator iterator()
+	public Iterator<Filter> iterator()
 	{
 		return filters.iterator();
 	}
 
 	public boolean isValidForShow(LogEvent le)
 	{
-		Iterator i = iterator();
+		Iterator<Filter> i = iterator();
 		while (i.hasNext())
 		{
-			Filter filter = (Filter) i.next();
+			Filter filter = i.next();
 			if (!filter.isValid(le))
 			{
 				return false;

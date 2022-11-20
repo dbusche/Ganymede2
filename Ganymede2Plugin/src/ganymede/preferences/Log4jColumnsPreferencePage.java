@@ -125,10 +125,10 @@ public class Log4jColumnsPreferencePage
 
 		// ADD IT LIST
 		cmboAddList = new Combo(entryTable, SWT.DROP_DOWN | SWT.READ_ONLY);
-		Iterator i = GanymedeUtilities.getColumnLabels();
+		Iterator<String> i = GanymedeUtilities.getColumnLabels();
 		while (i.hasNext())
 		{
-			cmboAddList.add((String) i.next());
+			cmboAddList.add(i.next());
 		}
 		cmboAddList.select(0);
 		gData = new GridData();
@@ -164,10 +164,10 @@ public class Log4jColumnsPreferencePage
 	protected void refreshList()
 	{
 		columnList.removeAll();
-		Iterator i = ColumnList.getInstance().getList();
+		Iterator<Integer> i = ColumnList.getInstance().getList();
 		while (i.hasNext())
 		{
-			Integer col = (Integer) i.next();
+			Integer col = i.next();
 			columnList.add(GanymedeUtilities.getLabelText(col.intValue()));
 		}
 	}

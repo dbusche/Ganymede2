@@ -44,9 +44,9 @@ public class Log4jFilterPreferencePage
      * Sets the default values of the preferences.
      */
     private void initializeDefaults() {
-    	Iterator i = LogSet.getInstance().getFilterset().iterator();
+    	Iterator<Filter> i = LogSet.getInstance().getFilterset().iterator();
     	while ( i.hasNext() ) {
-    		Filter filter = (Filter)i.next();
+    		Filter filter = i.next();
     		filterList.add(filter.toString());
     	}
     }
@@ -81,10 +81,10 @@ public class Log4jFilterPreferencePage
         data = new GridData(GridData.FILL_HORIZONTAL);
         combo1 = new Combo(entryTable, SWT.DROP_DOWN | SWT.READ_ONLY);
         
-        Iterator i = GanymedeUtilities.getColumnLabels();
+        Iterator<String> i = GanymedeUtilities.getColumnLabels();
         
         while ( i.hasNext() ) {
-        	combo1.add((String)i.next());
+        	combo1.add(i.next());
         }
         combo1.select(0);
         combo1.setLayoutData(data);

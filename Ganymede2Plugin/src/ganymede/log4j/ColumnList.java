@@ -17,7 +17,7 @@ import ganymede.api.LogEvent;
 public class ColumnList
 {
 
-	Vector columns = new Vector();
+	Vector<Integer> columns = new Vector<>();
 
 	static private boolean notInit = true;
 
@@ -45,13 +45,13 @@ public class ColumnList
 	{
 		return GanymedeUtilities.handleNull(
 			GanymedeUtilities
-				.Log4jItemFactory(((Integer) columns.get(col)).intValue(), le)
+				.Log4jItemFactory(columns.get(col).intValue(), le)
 				.getText());
 	}
 
 	public void add(int col)
 	{
-		columns.add(new Integer(col));
+		columns.add(Integer.valueOf(col));
 		if (GanymedeUtilities.isShowing())
 		{
 			new TableColumn(GanymedeUtilities.getTable(), SWT.NONE);
@@ -75,9 +75,9 @@ public class ColumnList
 		{
 			return;
 		} // border condition
-		Integer i = (Integer) columns.get(index);
+		Integer i = columns.get(index);
 		columns.remove(index);
-		columns.insertElementAt(i, index - 1);
+		columns.insertElementAt(Integer.valueOf(i), index - 1);
 	}
 
 	public void moveDown(int index)
@@ -86,9 +86,9 @@ public class ColumnList
 		{
 			return;
 		} // border condition
-		Integer i = (Integer) columns.get(index);
+		Integer i = columns.get(index);
 		columns.remove(index);
-		columns.insertElementAt(i, index + 1);
+		columns.insertElementAt(Integer.valueOf(i), index + 1);
 	}
 	
 	public void clear() {
@@ -102,7 +102,7 @@ public class ColumnList
 		}
 	}
 
-	public Iterator getList()
+	public Iterator<Integer> getList()
 	{
 		return columns.iterator();
 	}
@@ -114,7 +114,7 @@ public class ColumnList
 
 	public int getColType(int index)
 	{
-		return ((Integer) columns.get(index)).intValue();
+		return columns.get(index).intValue();
 	}
 
 	//TODO: Make this thread safe
@@ -124,7 +124,7 @@ public class ColumnList
 		int[] list = new int[size];
 		for (int i = 0; i < size; i++)
 		{
-			list[i] = ((Integer) columns.get(i)).intValue();
+			list[i] = columns.get(i).intValue();
 		}
 		return list;
 	}
@@ -161,10 +161,10 @@ public class ColumnList
 
 	public void setColList(int[] list)
 	{
-		columns = new Vector();
+		columns = new Vector<>();
 		for (int i = 0; i < list.length; i++)
 		{
-			columns.add(new Integer(list[i]));
+			columns.add(Integer.valueOf(list[i]));
 		}
 	}
 

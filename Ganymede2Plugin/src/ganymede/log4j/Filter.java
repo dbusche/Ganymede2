@@ -181,7 +181,7 @@ public class Filter implements Serializable
 		sb.append(ENCODING_SEPERATOR);
 		sb.append(filter.getCriteria());
 		sb.append(ENCODING_SEPERATOR);
-		sb.append(new Boolean(filter.inclusive).toString());
+		sb.append(Boolean.valueOf(filter.inclusive).toString());
 		return sb.toString();
 	}
 
