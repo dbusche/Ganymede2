@@ -53,6 +53,10 @@ public class Log4jServer extends Thread
 	static boolean mServerUp = false;
 
 	private static Log4jServer mLog4jServer;
+	
+	public Log4jServer(String name) {
+		super(name);
+	}
 
 	static public void init()
 	{
@@ -74,7 +78,7 @@ public class Log4jServer extends Thread
 			int port =
 					Ganymede.getDefault().getPreferenceStore().getInt(
 						Log4jPreferencePage.P_PORT);
-				setLog4jServer(new Log4jServer());
+				setLog4jServer(new Log4jServer(threadName("log4jServer")));
 				setServerSocket(new ServerSocket(port));
 				getServerSocket().setReuseAddress(true);
 				getLog4jServer().setServerUp(true);
@@ -91,6 +95,10 @@ public class Log4jServer extends Thread
 		
 		GanymedeUtilities.updateStartStopActions();
 		return true;
+	}
+
+	 static String threadName(String suffix) {
+		return Ganymede.getDefault().getBundle().getSymbolicName() + "." + suffix;
 	}
 
 	/**
@@ -154,7 +162,7 @@ public class Log4jServer extends Thread
 				s = mServerSocket.accept();
 				s.setSoLinger(false, -1);
 				s.setReuseAddress(false);
-				client_conn = new ClientConn(s);
+				client_conn = new ClientConn(threadName("clientConnection"), s);
 				client_conn.start();
 			}
 		}
@@ -204,8 +212,9 @@ public class Log4jServer extends Thread
 	class ClientConn extends Thread
 	{
 
-		public ClientConn(Socket s)
+		public ClientConn(String name, Socket s)
 		{
+			super(name);
 			registeredConverters = new ArrayList<>();
 			for (IConfigurationElement e : Platform.getExtensionRegistry()
 					.getConfigurationElementsFor("ganymede.extensionpoint.logevent.api")) {
