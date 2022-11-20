@@ -14,9 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import ganymede.Ganymede;
@@ -60,7 +58,6 @@ public class GanymedeView extends ViewPart
 	public GanymedeView()
 	{
 		super();
-		GanymedeUtilities.setView(this);
 	}
 
 	/**
@@ -69,7 +66,7 @@ public class GanymedeView extends ViewPart
 	 */
 	public void createPartControl(Composite parent)
 	{
-
+		GanymedeUtilities.setView(this);
 		IPreferenceStore store = Ganymede.getDefault().getPreferenceStore();
 		
 		GridLayout layout = new GridLayout(2, false);
@@ -162,13 +159,12 @@ public class GanymedeView extends ViewPart
 
 	private void hookDoubleClickAction()
 	{
-		GanymedeUtilities.setShowDetailAction(new ShowDetailAction());
-
 		table.addMouseListener(new IMouseListener()
 		{
+			ShowDetailAction showDetailAction = new ShowDetailAction();
 			public void mouseDoubleClick(MouseEvent e)
 			{
-				GanymedeUtilities.getShowDetailAction().run();
+				showDetailAction.run();
 			}
 		});
 	}
@@ -183,16 +179,7 @@ public class GanymedeView extends ViewPart
 			table.getParent().setFocus();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite)
-	 */
-	public void init(IViewSite site) throws PartInitException
-	{
-		super.init(site);
-		GanymedeUtilities.setSite(site);
-	}
-
+	
 	/**
 	 * @return Returns the filterLabel.
 	 */

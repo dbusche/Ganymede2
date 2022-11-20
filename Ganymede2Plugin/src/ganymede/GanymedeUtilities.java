@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 
-import ganymede.actions.ShowDetailAction;
 import ganymede.api.Level;
 import ganymede.api.LogEvent;
 import ganymede.log4j.ColumnList;
@@ -45,10 +44,6 @@ public class GanymedeUtilities {
 	private static Table table;
 
 	private static GanymedeView mView;
-
-	private static Log4jServer mSocketServer;
-
-	private static ShowDetailAction mShowDetailAction;
 
 	private static Hashtable<String, Color> colors = new Hashtable<>(5);
 
@@ -240,20 +235,6 @@ public class GanymedeUtilities {
 	}
 
 	/**
-	 * @return
-	 */
-	public static Log4jServer getSocketServer() {
-		return mSocketServer;
-	}
-
-	/**
-	 * @param aServer
-	 */
-	public static void setSocketServer(Log4jServer aServer) {
-		mSocketServer = aServer;
-	}
-
-	/**
 	 * Show a message box
 	 * 
 	 * @param message
@@ -261,20 +242,6 @@ public class GanymedeUtilities {
 	static public void showMessage(String message) {
 		MessageDialog.openInformation(getTable().getParent().getShell(),
 				"Ganymede Log4j View", message + "...");
-	}
-
-	/**
-	 * @return
-	 */
-	public static ShowDetailAction getShowDetailAction() {
-		return mShowDetailAction;
-	}
-
-	/**
-	 * @param aAction
-	 */
-	public static void setShowDetailAction(ShowDetailAction aAction) {
-		mShowDetailAction = aAction;
 	}
 
 	static public void updateColors() {
@@ -448,20 +415,6 @@ public class GanymedeUtilities {
 	 */
 	static public void setActionsInited(boolean aB) {
 		mActionsInited = aB;
-	}
-
-	/**
-	 * @return
-	 */
-	public static IViewSite getSite() {
-		return mSite;
-	}
-
-	/**
-	 * @param aSite
-	 */
-	public static void setSite(IViewSite aSite) {
-		mSite = aSite;
 	}
 
 	/**
