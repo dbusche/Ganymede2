@@ -301,18 +301,6 @@ POSSIBILITY OF SUCH DAMAGES.
       <update url="https://dbusche.github.io/Ganymede2/"/>
    </url>
 
-   <requires>
-      <import plugin="org.eclipse.ui" version="3.119.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.23.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources" version="3.15.100" match="greaterOrEqual"/>
-      <import plugin="org.junit" version="4.13.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.e4.ui.model.workbench" version="2.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.e4.ui.workbench.renderers.swt" version="0.15.200" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.expressions"/>
-      <import plugin="org.eclipse.ui.console" version="3.11.100" match="greaterOrEqual"/>
-      <import plugin="javax.inject"/>
-   </requires>
-
    <plugin
          id="com.github.dbusche.ganymede2"
          download-size="0"
