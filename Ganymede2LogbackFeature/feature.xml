@@ -2,7 +2,7 @@
 <feature
       id="com.github.dbusche.ganymede2.logback.feature"
       label="Ganymede2 - Extension for Logback logging frameworks"
-      version="1.1.0.qualifier"
+      version="1.3.0.qualifier"
       plugin="com.github.dbusche.ganymede2.logback">
 
    <description url="https://github.com/dbusche/Ganymede2">
@@ -304,9 +304,6 @@ POSSIBILITY OF SUCH DAMAGES.
 
    <plugin
          id="com.github.dbusche.ganymede2.logback"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
