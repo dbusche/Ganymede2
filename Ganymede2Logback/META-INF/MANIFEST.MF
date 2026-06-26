@@ -4,7 +4,7 @@ Bundle-Name: Ganymede2Logback
 Bundle-SymbolicName: com.github.dbusche.ganymede2.logback;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: com.github.dbusche.ganymede2;bundle-version="1.1.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: Ganymede2Logback
 Bundle-ClassPath: lib/logback-classic-1.5.35.jar,
  lib/logback-core-1.5.35.jar,
